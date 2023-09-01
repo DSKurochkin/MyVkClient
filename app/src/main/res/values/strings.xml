@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">ClienVK</string>
+    <string name="sample_post">We are the champions - my friend.
+        And we will keep on fighting till the end. We are the champions</string>
+    <string name="sample_group_name">FootballTeam</string>
+    <string name="sample_post_time">14:00</string>
+    <string name="icon_nav_home">Home</string>
+    <string name="icon_nav_favorite">Favorite</string>
+    <string name="icon_nav_profile">Profile</string>
+</resources>
