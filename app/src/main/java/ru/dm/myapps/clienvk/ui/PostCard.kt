@@ -2,6 +2,7 @@ package ru.dm.myapps.clienvk.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,22 +24,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.dm.myapps.clienvk.R
-import ru.dm.myapps.clienvk.ui.theme.ClienVKTheme
+import ru.dm.myapps.clienvk.domain.FeedPost
+import ru.dm.myapps.clienvk.domain.StatisticItem
+import ru.dm.myapps.clienvk.domain.StatisticType
 
 @Composable
-fun PostCard() {
+fun PostCard(
+    modifier: Modifier = Modifier,
+    feedPost: FeedPost,
+    onViewsItemClickListener: (StatisticType) -> Unit,
+    onSharedItemClickListener: (StatisticType) -> Unit,
+    onCommentsItemClickListener: (StatisticType) -> Unit,
+    onLikeItemClickListener: (StatisticType) -> Unit
+) {
 
     Card(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
+        modifier = modifier
             .fillMaxHeight()
-            .padding(6.dp)
-
 
     ) {
         Column(
@@ -50,24 +56,32 @@ fun PostCard() {
 
         ) {
 
-            PostHeader()
-            PostText()
-            MainImage()
-            Statistic()
+            PostHeader(feedPost)
+            PostText(feedPost)
+            MainImage(feedPost)
+            Statistic(
+                feedPost.statisticItems,
+                onViewsItemClickListener,
+                onCommentsItemClickListener,
+                onSharedItemClickListener,
+                onLikeItemClickListener
+            )
         }
     }
 
 }
 
 @Composable
-private fun PostHeader() {
+private fun PostHeader(
+    feedPost: FeedPost
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
     ) {
         Icon(
             modifier = Modifier.size(50.dp),
-            painter = painterResource(id = R.drawable.soccer_24),
+            painter = painterResource(id = feedPost.avatarResId),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onSurface
         )
@@ -76,11 +90,11 @@ private fun PostHeader() {
             modifier = Modifier.weight(1f)
         ) {
             Text(
-                text = stringResource(R.string.sample_group_name),
+                text = feedPost.communityName,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(2.dp))
-            Text(text = stringResource(R.string.sample_post_time))
+            Text(text = feedPost.publicationDate)
         }
         Icon(
             imageVector = Icons.Rounded.MoreVert,
@@ -92,48 +106,71 @@ private fun PostHeader() {
 }
 
 @Composable
-private fun PostText() {
+private fun PostText(
+    feedPost: FeedPost
+) {
     Text(
-        // modifier = Modifier.padding(start = 5.dp, end = 5.dp),
-        text = stringResource(id = R.string.sample_post)
+        text = feedPost.contentText
     )
+
     MainSpacer()
 }
 
 @Composable
-private fun MainImage() {
+private fun MainImage(
+    feedPost: FeedPost
+) {
     Image(
-        painter = painterResource(id = R.drawable.pic),
+        painter = painterResource(feedPost.contentImageResId),
         contentDescription = null,
         modifier = Modifier
-            .height(560.dp)
-            .fillMaxSize(),
-
-        //  contentScale = ContentScale.FillWidth
+            .fillMaxWidth()
+            .height(450.dp)
     )
-    MainSpacer()
+    MainSpacer(15.dp)
+
 }
 
 @Composable
-private fun Statistic() {
+private fun Statistic(
+    statisticItems: Map<StatisticType, StatisticItem>,
+    onViewsClickListener: (StatisticType) -> Unit,
+    onSharedClickListener: (StatisticType) -> Unit,
+    onCommentClickListener: (StatisticType) -> Unit,
+    onLikeClickListener: (StatisticType) -> Unit
+
+) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 7.dp, end = 7.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(
             modifier = Modifier.weight(1f)
         ) {
-            IconWithText(iconResId = R.drawable.eye_24, text = "250")
+            IconWithText(
+                iconResId = R.drawable.eye_24,
+                text = statisticItems[StatisticType.VIEWS]?.count.toString(),
+                onClickListener = { onViewsClickListener(StatisticType.VIEWS) }
+            )
         }
 
         Row(
             modifier = Modifier.weight(1f)
         ) {
-            IconWithText(iconResId = R.drawable.share, text = "300")
-            IconWithText(iconResId = R.drawable.comment_24, text = "500")
-            IconWithText(iconResId = R.drawable.like_106, text = "404")
+            IconWithText(
+                iconResId = R.drawable.share,
+                text = statisticItems[StatisticType.SHARES]?.count.toString(),
+                onClickListener = { onSharedClickListener(StatisticType.SHARES) }
+            )
+            IconWithText(
+                iconResId = R.drawable.comment_24,
+                text = statisticItems[StatisticType.COMMENTS]?.count.toString(),
+                onClickListener = { onCommentClickListener(StatisticType.COMMENTS) }
+            )
+            IconWithText(
+                iconResId = R.drawable.like_106,
+                text = statisticItems[StatisticType.LIKES]?.count.toString(),
+                onClickListener = { onLikeClickListener(StatisticType.LIKES) }
+            )
         }
     }
 }
@@ -141,11 +178,14 @@ private fun Statistic() {
 @Composable
 private fun IconWithText(
     iconResId: Int,
-    text: String
+    text: String,
+    onClickListener: () -> Unit
 ) {
     Row(
-        modifier = Modifier.fillMaxHeight(),
-        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxHeight()
+            .clickable { onClickListener() },
+        verticalAlignment = Alignment.Top,
     ) {
         Text(text = text)
         Spacer(Modifier.width(2.dp))
@@ -156,25 +196,26 @@ private fun IconWithText(
 }
 
 @Composable
-private fun MainSpacer() {
-    Spacer(modifier = Modifier.height(5.dp))
+private fun MainSpacer(height: Dp = 5.dp) {
+    Spacer(modifier = Modifier.height(height))
 }
 
 
-@Preview
-@Composable
-private fun TestLightTheme() {
-    ClienVKTheme(darkTheme = false) {
-        PostCard()
-    }
-}
+//@Preview
+//@Composable
+//private fun TestLightTheme() {
+//    ClienVKTheme(darkTheme = false) {
+//        PostCard()
+//    }
+//}
+//
+//@Preview
+//@Composable
+//private fun TestDarkTheme() {
+//    ClienVKTheme(darkTheme = true) {
+//        PostCard()
+//    }
+//}
 
-@Preview
-@Composable
-private fun TestDarkTheme() {
-    ClienVKTheme(darkTheme = true) {
-        PostCard()
-    }
-}
 
 
