@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -51,7 +50,6 @@ fun PostCard(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
-                .padding(8.dp)
 
 
         ) {
@@ -102,7 +100,7 @@ private fun PostHeader(
             tint = MaterialTheme.colorScheme.onSurface
         )
     }
-    MainSpacer()
+    PostSpacer()
 }
 
 @Composable
@@ -113,7 +111,7 @@ private fun PostText(
         text = feedPost.contentText
     )
 
-    MainSpacer()
+    PostSpacer()
 }
 
 @Composable
@@ -127,7 +125,7 @@ private fun MainImage(
             .fillMaxWidth()
             .height(450.dp)
     )
-    MainSpacer(15.dp)
+    PostSpacer(15.dp)
 
 }
 
@@ -196,7 +194,7 @@ private fun IconWithText(
 }
 
 @Composable
-private fun MainSpacer(height: Dp = 5.dp) {
+private fun PostSpacer(height: Dp = 5.dp) {
     Spacer(modifier = Modifier.height(height))
 }
 

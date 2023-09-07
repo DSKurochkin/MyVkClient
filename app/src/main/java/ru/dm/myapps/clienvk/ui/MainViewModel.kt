@@ -8,17 +8,44 @@ import ru.dm.myapps.clienvk.domain.StatisticItem
 import ru.dm.myapps.clienvk.domain.StatisticType
 
 class MainViewModel : ViewModel() {
-    private val _feedPost = MutableLiveData<FeedPost>(FeedPost())
-    val feedPost: LiveData<FeedPost>
-        get() = _feedPost
-
-    fun updateFeedPost(type: StatisticType) {
-        val oldFeedPost = feedPost.value ?: throw IllegalArgumentException()
-        val newStatistic = oldFeedPost.statisticItems.toMutableMap().apply {
-            val item = this[type] ?: StatisticItem(type, 0)
-            this.put(type, StatisticItem(type, item.count + 1))
+    private val _feedPostList = MutableLiveData<List<FeedPost>>(
+        mutableListOf<FeedPost>().apply {
+            add(FeedPost())
+            repeat(20) {
+                add(FeedPost.genFeedPost(it))
+            }
         }
-        _feedPost.value = _feedPost.value?.copy(statisticItems = newStatistic)
+    )
+    val feedPostList: LiveData<List<FeedPost>>
+        get() = _feedPostList
+
+
+    fun updateFeedPost(updType: StatisticType, feedPostToChange: FeedPost) {
+        val modifyPosts = _feedPostList.value?.toMutableList() ?: mutableListOf()
+        modifyPosts.replaceAll {
+            if (it.id == feedPostToChange.id) {
+                it.copy(statisticItems = copyStatistic(it, updType))
+            } else {
+                it
+            }
+        }
+        _feedPostList.value = modifyPosts
     }
 
+    fun delete(feedPost: FeedPost) {
+        val modifyPosts = _feedPostList.value?.toMutableList() ?: mutableListOf()
+        modifyPosts.remove(feedPost)
+        _feedPostList.value = modifyPosts
+
+    }
+
+    private fun copyStatistic(
+        feedPost: FeedPost,
+        updType: StatisticType
+    ): Map<StatisticType, StatisticItem> {
+        return feedPost.statisticItems.toMutableMap().apply {
+            val item = this[updType] ?: StatisticItem(updType, 0)
+            this.put(updType, StatisticItem(updType, item.count + 1))
+        }
+    }
 }
