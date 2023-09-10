@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.background)
                 ) {
-                    MainScreen(viewModel)
+                    MainScreen(viewModel = viewModel)
                 }
             }
         }

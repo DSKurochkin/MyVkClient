@@ -6,13 +6,14 @@ import androidx.lifecycle.ViewModel
 import ru.dm.myapps.clienvk.domain.FeedPost
 import ru.dm.myapps.clienvk.domain.StatisticItem
 import ru.dm.myapps.clienvk.domain.StatisticType
+import ru.dm.myapps.clienvk.utils.genFeedPost
 
 class MainViewModel : ViewModel() {
     private val _feedPostList = MutableLiveData<List<FeedPost>>(
         mutableListOf<FeedPost>().apply {
             add(FeedPost())
             repeat(20) {
-                add(FeedPost.genFeedPost(it))
+                add(genFeedPost(it))
             }
         }
     )
