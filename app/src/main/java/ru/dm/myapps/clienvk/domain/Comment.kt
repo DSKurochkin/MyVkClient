@@ -1,9 +1,9 @@
 package ru.dm.myapps.clienvk.domain
 
 data class Comment(
-    private val id: Int,
-    private val authorName: String,
-    private val authorAvatarResId: Int,
-    private val text: String,
-    private val publicationDate: String
+    val id: Int,
+    val authorName: String,
+    val authorAvatarResId: Int,
+    val text: String,
+    val publicationDate: String
 )

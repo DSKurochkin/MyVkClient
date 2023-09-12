@@ -43,18 +43,14 @@ fun NewsScreen(viewModel: MainViewModel) {
                         feedPost = feedPost,
                         onViewsItemClickListener = { viewModel.updateFeedPost(it, feedPost) },
                         onSharedItemClickListener = { viewModel.updateFeedPost(it, feedPost) },
-                        onCommentsItemClickListener = {
-                            viewModel.updateFeedPost(
-                                it,
-                                feedPost
-                            )
-                        },
+                        onCommentsItemClickListener = { },
                         onLikeItemClickListener = { viewModel.updateFeedPost(it, feedPost) }
                     )
                 },
                 directions = setOf(DismissDirection.EndToStart)
             )
         }
+
 
     }
 }

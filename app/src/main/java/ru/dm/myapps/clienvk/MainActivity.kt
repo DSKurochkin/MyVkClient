@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import ru.dm.myapps.clienvk.ui.MainScreen
 import ru.dm.myapps.clienvk.ui.MainViewModel
 import ru.dm.myapps.clienvk.ui.theme.ClienVKTheme
+import ru.dm.myapps.clienvk.ui.theme.CommentsViewModel
 
 class MainActivity : ComponentActivity() {
 

@@ -25,12 +25,15 @@ fun MainScreen(viewModel: MainViewModel) {
     val navigationState = rememberNavigationState()
     Scaffold(
         bottomBar = { BottomBar(navigationState) },
-    ) {
+
+        ) {
         AppNavGraph(
             navHostController = navigationState.navHostController,
-            homeScreenshotCallback = { NewsScreen(viewModel = viewModel) },
+            homeScreenshotCallback = {
+                NewsScreen(viewModel = viewModel)
+            },
             favoriteScreenshotCallback = { FavoriteScreen() },
-            profileScreenshotCallback = { ProfileScreen() }
+            profileScreenshotCallback = { ProfileScreen() },
         )
     }
 }

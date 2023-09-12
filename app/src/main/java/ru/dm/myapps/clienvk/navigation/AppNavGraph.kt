@@ -10,7 +10,7 @@ fun AppNavGraph(
     navHostController: NavHostController,
     homeScreenshotCallback: @Composable () -> Unit,
     favoriteScreenshotCallback: @Composable () -> Unit,
-    profileScreenshotCallback: @Composable () -> Unit
+    profileScreenshotCallback: @Composable () -> Unit,
 ) {
     NavHost(navController = navHostController,
         startDestination = Screen.NewsFeed.route,

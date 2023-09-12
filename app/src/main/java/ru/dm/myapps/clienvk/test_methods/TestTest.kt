@@ -1,4 +1,4 @@
-package ru.dm.myapps.clienvk.ui.test_methods
+package ru.dm.myapps.clienvk.test_methods
 
 import kotlin.random.Random
 

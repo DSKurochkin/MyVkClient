@@ -58,11 +58,11 @@ fun PostCard(
             PostText(feedPost)
             MainImage(feedPost)
             Statistic(
-                feedPost.statisticItems,
-                onViewsItemClickListener,
-                onCommentsItemClickListener,
-                onSharedItemClickListener,
-                onLikeItemClickListener
+                statisticItems = feedPost.statisticItems,
+                onViewsClickListener = onViewsItemClickListener,
+                onSharedClickListener = onSharedItemClickListener,
+                onCommentClickListener = onCommentsItemClickListener,
+                onLikeClickListener = onLikeItemClickListener
             )
         }
     }
