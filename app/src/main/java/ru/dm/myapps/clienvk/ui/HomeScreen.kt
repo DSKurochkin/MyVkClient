@@ -1,5 +1,6 @@
 package ru.dm.myapps.clienvk.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,11 +15,43 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import ru.dm.myapps.clienvk.domain.FeedPost
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun NewsScreen(viewModel: MainViewModel) {
-    val feedPostsListState = viewModel.feedPostList.observeAsState(listOf())
+fun HomeScreen(viewModel: MainViewModel) {
+    val state = viewModel.screenState.observeAsState(HomeScreenState.Initial())
+
+    val currentState = state.value
+    when (currentState) {
+        is HomeScreenState.Posts -> Posts(
+            viewModel = viewModel,
+            posts = currentState.posts
+        )
+
+        is HomeScreenState.Comments -> {
+            CommentsScreen(
+                post = currentState.post,
+                comments = currentState.comments,
+                onBackPressedListener = { viewModel.closeComments() }
+            )
+            BackHandler {
+                viewModel.closeComments()
+            }
+        }
+
+        is HomeScreenState.Initial -> {}
+    }
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@Composable
+fun Posts(
+    viewModel: MainViewModel,
+    posts: List<FeedPost>,
+) {
+
     LazyColumn(
         contentPadding = PaddingValues(
             top = 16.dp,
@@ -28,7 +61,7 @@ fun NewsScreen(viewModel: MainViewModel) {
         ),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(items = feedPostsListState.value, key = { it.id }) { feedPost ->
+        items(items = posts, key = { it.id }) { feedPost ->
             val dismissState = rememberDismissState(positionalThreshold = { 100.dp.toPx() })
             if (dismissState.isDismissed(DismissDirection.EndToStart)) {
                 viewModel.delete(feedPost)
@@ -43,7 +76,7 @@ fun NewsScreen(viewModel: MainViewModel) {
                         feedPost = feedPost,
                         onViewsItemClickListener = { viewModel.updateFeedPost(it, feedPost) },
                         onSharedItemClickListener = { viewModel.updateFeedPost(it, feedPost) },
-                        onCommentsItemClickListener = { },
+                        onCommentsItemClickListener = { viewModel.showComments(feedPost) },
                         onLikeItemClickListener = { viewModel.updateFeedPost(it, feedPost) }
                     )
                 },
@@ -53,4 +86,5 @@ fun NewsScreen(viewModel: MainViewModel) {
 
 
     }
+
 }

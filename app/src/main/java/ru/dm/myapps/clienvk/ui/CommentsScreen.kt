@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,7 +25,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,56 +32,59 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.dm.myapps.clienvk.domain.Comment
-import ru.dm.myapps.clienvk.navigation.Screen
-import ru.dm.myapps.clienvk.navigation.rememberNavigationState
-import ru.dm.myapps.clienvk.ui.theme.CommentsViewModel
+import ru.dm.myapps.clienvk.domain.FeedPost
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 
 
-fun CommentsScreen(commentsViewModel: CommentsViewModel) {
-    val navigationState = rememberNavigationState()
-    val commentsListState = commentsViewModel.commentList.observeAsState(listOf())
-
+fun CommentsScreen(
+    post: FeedPost,
+    comments: List<Comment>,
+    onBackPressedListener: () -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
                 modifier = Modifier.padding(start = 20.dp),
                 title = {
-                    Text(text = "Comment for post")
+                    Text(text = "Comment for post: ${post.id}")
                 },
                 navigationIcon = {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = null,
-                        modifier = Modifier.clickable { navigationState.navigateTo(Screen.NewsFeed.route) }
+                        modifier = Modifier.clickable { onBackPressedListener() }
                     )
                 }
             )
         }
     )
-    {
+    { paddingValues ->
 
         LazyColumn(
             modifier = Modifier
-                .padding(it)
-                .padding(start = 20.dp, end = 20.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+                .padding(paddingValues),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(
+                top = 16.dp,
+                start = 8.dp,
+                end = 8.dp,
+                bottom = 72.dp
+            )
         )
         {
-            items(commentsListState.value, { it.id }) { comment ->
+            items(comments, { it.id }) { comment ->
                 Comment(comment = comment)
             }
+
         }
-
-
     }
 }
 
 @Composable
-fun Comment(comment: Comment) {
+private fun Comment(comment: Comment) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -90,19 +93,20 @@ fun Comment(comment: Comment) {
             Icon(
                 painter = painterResource(comment.authorAvatarResId),
                 contentDescription = null,
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(32.dp),
+                tint = Color.Green
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column {
                 Row {
-                    Text(text = comment.authorName, fontSize = 15.sp)
+                    Text(text = comment.authorName, fontSize = 15.sp, color = Color.Black)
                     Spacer(modifier = Modifier.width(5.dp))
-                    Text(text = "CommentId: ${comment.id}", fontSize = 15.sp)
+                    Text(text = "CommentId: ${comment.id}", fontSize = 15.sp, color = Color.Black)
                 }
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(text = comment.text, fontSize = 18.sp)
+                Text(text = comment.text, fontSize = 18.sp, color = Color.Black)
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(text = comment.publicationDate, fontSize = 15.sp)
+                Text(text = comment.publicationDate, fontSize = 15.sp, color = Color.Black)
             }
         }
     }

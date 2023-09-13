@@ -30,7 +30,7 @@ fun MainScreen(viewModel: MainViewModel) {
         AppNavGraph(
             navHostController = navigationState.navHostController,
             homeScreenshotCallback = {
-                NewsScreen(viewModel = viewModel)
+                HomeScreen(viewModel = viewModel)
             },
             favoriteScreenshotCallback = { FavoriteScreen() },
             profileScreenshotCallback = { ProfileScreen() },
