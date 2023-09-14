@@ -1,4 +1,4 @@
-package ru.dm.myapps.clienvk.ui
+package ru.dm.myapps.clienvk.ui.favorite_scr
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,19 +17,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun ProfileScreen() {
+fun FavoriteScreen() {
     var count by rememberSaveable {
         mutableStateOf(0)
     }
-
-
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Red), contentAlignment = Alignment.Center
+            .background(Color.Yellow), contentAlignment = Alignment.Center
     ) {
         Column {
-            Text(text = "ProfileScreen", color = Color.White, fontSize = 30.sp)
+            Text(text = "Favorite Screen", color = Color.Red, fontSize = 30.sp)
             Text(
                 modifier = Modifier.clickable { count++ },
                 text = "Count: $count",
@@ -38,5 +36,3 @@ fun ProfileScreen() {
         }
     }
 }
-
-

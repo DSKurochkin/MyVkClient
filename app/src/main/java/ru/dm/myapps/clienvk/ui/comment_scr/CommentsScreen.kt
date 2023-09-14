@@ -1,7 +1,6 @@
-package ru.dm.myapps.clienvk.ui
+package ru.dm.myapps.clienvk.ui.comment_scr
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,14 +23,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.dm.myapps.clienvk.domain.Comment
-import ru.dm.myapps.clienvk.domain.FeedPost
+import ru.dm.myapps.clienvk.ui.state.CommentsScreenState
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,16 +39,18 @@ import ru.dm.myapps.clienvk.domain.FeedPost
 
 
 fun CommentsScreen(
-    post: FeedPost,
-    comments: List<Comment>,
     onBackPressedListener: () -> Unit
 ) {
+    val viewModel: CommentsViewModel = viewModel()
+    val screenState = viewModel.commentsScreenState.observeAsState(CommentsScreenState.Initial)
+    val currentState = screenState.value
+    if (currentState !is CommentsScreenState.Comments) return
     Scaffold(
         topBar = {
             TopAppBar(
                 modifier = Modifier.padding(start = 20.dp),
                 title = {
-                    Text(text = "Comment for post: ${post.id}")
+                    Text(text = "Comment for post id: ${currentState.post.id}")
                 },
                 navigationIcon = {
                     Icon(
@@ -75,7 +76,7 @@ fun CommentsScreen(
             )
         )
         {
-            items(comments, { it.id }) { comment ->
+            items(currentState.comments, { it.id }) { comment ->
                 Comment(comment = comment)
             }
 
@@ -115,17 +116,17 @@ private fun Comment(comment: Comment) {
 }
 
 
-@Composable
-fun BiBox() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black),
-        contentAlignment = Alignment.Center
-    ) {
-        Text("FooBar")
-    }
-}
+//@Composable
+//fun BiBox() {
+//    Box(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .background(Color.Black),
+//        contentAlignment = Alignment.Center
+//    ) {
+//        Text("FooBar")
+//    }
+//}
 
 ///////////
 

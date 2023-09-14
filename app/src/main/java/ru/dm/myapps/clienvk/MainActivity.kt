@@ -10,13 +10,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
 import ru.dm.myapps.clienvk.ui.MainScreen
-import ru.dm.myapps.clienvk.ui.MainViewModel
+import ru.dm.myapps.clienvk.ui.home_scr.NewsFeedViewModel
 import ru.dm.myapps.clienvk.ui.theme.ClienVKTheme
-import ru.dm.myapps.clienvk.ui.theme.CommentsViewModel
 
 class MainActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<MainViewModel>()
+    private val viewModel by viewModels<NewsFeedViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -26,7 +25,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.background)
                 ) {
-                    MainScreen(viewModel = viewModel)
+                    MainScreen()
                 }
             }
         }

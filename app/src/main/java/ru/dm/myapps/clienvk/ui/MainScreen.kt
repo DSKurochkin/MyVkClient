@@ -1,6 +1,7 @@
 package ru.dm.myapps.clienvk.ui
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -11,18 +12,29 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
+import ru.dm.myapps.clienvk.domain.FeedPost
 import ru.dm.myapps.clienvk.navigation.AppNavGraph
 import ru.dm.myapps.clienvk.navigation.NavigationState
 import ru.dm.myapps.clienvk.navigation.rememberNavigationState
+import ru.dm.myapps.clienvk.ui.comment_scr.CommentsScreen
+import ru.dm.myapps.clienvk.ui.favorite_scr.FavoriteScreen
+import ru.dm.myapps.clienvk.ui.home_scr.HomeScreen
+import ru.dm.myapps.clienvk.ui.profile_scr.ProfileScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun MainScreen(viewModel: MainViewModel) {
+fun MainScreen() {
     val navigationState = rememberNavigationState()
+    val commentsToPost: MutableState<FeedPost?> = remember {
+        mutableStateOf(null)
+    }
     Scaffold(
         bottomBar = { BottomBar(navigationState) },
 
@@ -30,7 +42,16 @@ fun MainScreen(viewModel: MainViewModel) {
         AppNavGraph(
             navHostController = navigationState.navHostController,
             homeScreenshotCallback = {
-                HomeScreen(viewModel = viewModel)
+                if (commentsToPost.value == null) {
+                    HomeScreen(onCommentsItemClickListener = { post ->
+                        commentsToPost.value = post
+                    })
+                } else {
+                    CommentsScreen { commentsToPost.value = null }
+                    BackHandler {
+                        commentsToPost.value = null
+                    }
+                }
             },
             favoriteScreenshotCallback = { FavoriteScreen() },
             profileScreenshotCallback = { ProfileScreen() },

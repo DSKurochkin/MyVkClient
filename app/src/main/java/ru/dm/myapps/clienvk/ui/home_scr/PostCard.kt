@@ -1,4 +1,4 @@
-package ru.dm.myapps.clienvk.ui
+package ru.dm.myapps.clienvk.ui.home_scr
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -111,7 +111,7 @@ private fun PostText(
         text = feedPost.contentText
     )
 
-    PostSpacer()
+    PostSpacer(8.dp)
 }
 
 @Composable
@@ -194,26 +194,10 @@ private fun IconWithText(
 }
 
 @Composable
-private fun PostSpacer(height: Dp = 5.dp) {
+private fun PostSpacer(height: Dp = 4.dp) {
     Spacer(modifier = Modifier.height(height))
 }
 
-
-//@Preview
-//@Composable
-//private fun TestLightTheme() {
-//    ClienVKTheme(darkTheme = false) {
-//        PostCard()
-//    }
-//}
-//
-//@Preview
-//@Composable
-//private fun TestDarkTheme() {
-//    ClienVKTheme(darkTheme = true) {
-//        PostCard()
-//    }
-//}
 
 
 
