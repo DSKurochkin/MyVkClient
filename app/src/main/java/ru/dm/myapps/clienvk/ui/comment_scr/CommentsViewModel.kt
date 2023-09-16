@@ -8,7 +8,9 @@ import ru.dm.myapps.clienvk.domain.FeedPost
 import ru.dm.myapps.clienvk.ui.state.CommentsScreenState
 import ru.dm.myapps.clienvk.utils.genComment
 
-class CommentsViewModel : ViewModel() {
+class CommentsViewModel(
+    post: FeedPost
+) : ViewModel() {
     private var _commentsScreenState =
         MutableLiveData<CommentsScreenState>(CommentsScreenState.Initial)
     val commentsScreenState: LiveData<CommentsScreenState>
@@ -24,7 +26,7 @@ class CommentsViewModel : ViewModel() {
     }
 
     init {
-        loadComments(FeedPost())
+        loadComments(post)
     }
 
 //    fun loadComments(post: FeedPost, comments:List<Comment>){

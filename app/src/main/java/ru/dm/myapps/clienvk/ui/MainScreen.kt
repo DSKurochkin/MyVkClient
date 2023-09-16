@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.dm.myapps.clienvk.domain.FeedPost
 import ru.dm.myapps.clienvk.navigation.AppNavGraph
@@ -41,20 +42,23 @@ fun MainScreen() {
         ) {
         AppNavGraph(
             navHostController = navigationState.navHostController,
-            homeScreenshotCallback = {
-                if (commentsToPost.value == null) {
-                    HomeScreen(onCommentsItemClickListener = { post ->
-                        commentsToPost.value = post
-                    })
-                } else {
-                    CommentsScreen { commentsToPost.value = null }
-                    BackHandler {
-                        commentsToPost.value = null
-                    }
-                }
+            newsFeedScreenshotCallback = {
+                HomeScreen(onCommentsItemClickListener = { post ->
+                    commentsToPost.value = post
+                    navigationState.navigateToComment()
+                })
             },
             favoriteScreenshotCallback = { FavoriteScreen() },
             profileScreenshotCallback = { ProfileScreen() },
+            commentsScreenshotCallback = {
+                CommentsScreen(
+                    onBackPressedListener = { navigationState.navHostController.popBackStack() },
+                    post = commentsToPost.value!!
+                )
+                BackHandler {
+                    navigationState.navHostController.popBackStack()
+                }
+            }
         )
     }
 }
@@ -63,17 +67,21 @@ fun MainScreen() {
 @Composable
 private fun BottomBar(navigationState: NavigationState) {
     val navBackStackEntry by navigationState.navHostController.currentBackStackEntryAsState()
-    val currentRout = navBackStackEntry?.destination?.route
 
     val items = listOf(NavigationItem.Home, NavigationItem.Favorite, NavigationItem.Profile)
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.onBackground
     ) {
         items.forEach { item ->
+            val selected = navBackStackEntry?.destination?.hierarchy?.any {
+                it.route == item.screenName.route
+            } ?: false
             NavigationBarItem(
-                selected = item.screenName.route == currentRout,
+                selected = selected,
                 onClick = {
-                    navigationState.navigateTo(item.screenName.route)
+                    if (!selected) {
+                        navigationState.navigateTo(item.screenName.route)
+                    }
                 },
                 icon = { Icon(item.icon, null) },
                 label = { Text(stringResource(id = item.labelResId)) },
@@ -87,20 +95,3 @@ private fun BottomBar(navigationState: NavigationState) {
         }
     }
 }
-
-
-//@Preview
-//@Composable
-//private fun TestLightTheme() {
-//    ClienVKTheme(darkTheme = false) {
-//        MainScreen()
-//    }
-//}
-//
-//@Preview
-//@Composable
-//private fun TestDarkTheme() {
-//    ClienVKTheme(darkTheme = true) {
-//        MainScreen()
-//    }
-//}

@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.dm.myapps.clienvk.domain.Comment
+import ru.dm.myapps.clienvk.domain.FeedPost
 import ru.dm.myapps.clienvk.ui.state.CommentsScreenState
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -39,9 +40,10 @@ import ru.dm.myapps.clienvk.ui.state.CommentsScreenState
 
 
 fun CommentsScreen(
-    onBackPressedListener: () -> Unit
+    onBackPressedListener: () -> Unit,
+    post: FeedPost
 ) {
-    val viewModel: CommentsViewModel = viewModel()
+    val viewModel: CommentsViewModel = viewModel(factory = CommentsViewModelFactory(post))
     val screenState = viewModel.commentsScreenState.observeAsState(CommentsScreenState.Initial)
     val currentState = screenState.value
     if (currentState !is CommentsScreenState.Comments) return
