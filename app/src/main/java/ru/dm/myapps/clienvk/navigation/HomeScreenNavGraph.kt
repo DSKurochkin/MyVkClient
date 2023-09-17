@@ -6,6 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.google.gson.Gson
 import ru.dm.myapps.clienvk.domain.FeedPost
 
 
@@ -24,13 +25,15 @@ fun NavGraphBuilder.HomeScreenNavGraph(
             route = Screen.Comments.route,
             arguments = listOf(
                 navArgument(
-                    name = Screen.KEY_POST_ID,
-                    builder = { type = NavType.IntType }
+                    name = Screen.KEY_POST,
+                    builder = { type = NavType.StringType }
                 )
             )
         ) {
-            val postId = it.arguments?.getInt(Screen.KEY_POST_ID) ?: 0
-            commentsScreenCallback(FeedPost(id = postId))
+            val json = it.arguments?.getString(Screen.KEY_POST)
+                ?: throw IllegalArgumentException("Post is null")
+            val post = Gson().fromJson(json, FeedPost::class.java)
+            commentsScreenCallback(FeedPost(id = post.id))
         }
     }
 }
