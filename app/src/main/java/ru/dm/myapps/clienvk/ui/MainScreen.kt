@@ -12,14 +12,10 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
-import ru.dm.myapps.clienvk.domain.FeedPost
 import ru.dm.myapps.clienvk.navigation.AppNavGraph
 import ru.dm.myapps.clienvk.navigation.NavigationState
 import ru.dm.myapps.clienvk.navigation.rememberNavigationState
@@ -33,27 +29,24 @@ import ru.dm.myapps.clienvk.ui.profile_scr.ProfileScreen
 @Composable
 fun MainScreen() {
     val navigationState = rememberNavigationState()
-    val commentsToPost: MutableState<FeedPost?> = remember {
-        mutableStateOf(null)
-    }
+
     Scaffold(
         bottomBar = { BottomBar(navigationState) },
 
         ) {
         AppNavGraph(
             navHostController = navigationState.navHostController,
-            newsFeedScreenshotCallback = {
+            newsFeedScreenCallback = {
                 HomeScreen(onCommentsItemClickListener = { post ->
-                    commentsToPost.value = post
-                    navigationState.navigateToComment()
+                    navigationState.navigateToComment(post)
                 })
             },
-            favoriteScreenshotCallback = { FavoriteScreen() },
-            profileScreenshotCallback = { ProfileScreen() },
-            commentsScreenshotCallback = {
+            favoriteScreensCallback = { FavoriteScreen() },
+            profileScreenCallback = { ProfileScreen() },
+            commentsScreenContentCallback = { post ->
                 CommentsScreen(
                     onBackPressedListener = { navigationState.navHostController.popBackStack() },
-                    post = commentsToPost.value!!
+                    post = post
                 )
                 BackHandler {
                     navigationState.navHostController.popBackStack()

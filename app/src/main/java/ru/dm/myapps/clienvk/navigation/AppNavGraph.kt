@@ -4,25 +4,26 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import ru.dm.myapps.clienvk.domain.FeedPost
 
 @Composable
 fun AppNavGraph(
     navHostController: NavHostController,
-    newsFeedScreenshotCallback: @Composable () -> Unit,
-    favoriteScreenshotCallback: @Composable () -> Unit,
-    profileScreenshotCallback: @Composable () -> Unit,
-    commentsScreenshotCallback: @Composable () -> Unit
+    newsFeedScreenCallback: @Composable () -> Unit,
+    favoriteScreensCallback: @Composable () -> Unit,
+    profileScreenCallback: @Composable () -> Unit,
+    commentsScreenContentCallback: @Composable (post: FeedPost) -> Unit
 ) {
     NavHost(navController = navHostController,
         startDestination = Screen.Home.route,
         builder = {
-            HomeScreenNavGraph(newsFeedScreenshotCallback, commentsScreenshotCallback)
+            HomeScreenNavGraph(newsFeedScreenCallback, commentsScreenContentCallback)
 
             composable(route = Screen.Favorite.route) {
-                favoriteScreenshotCallback()
+                favoriteScreensCallback()
             }
             composable(route = Screen.PROFILE.route) {
-                profileScreenshotCallback()
+                profileScreenCallback()
             }
         }
     )
