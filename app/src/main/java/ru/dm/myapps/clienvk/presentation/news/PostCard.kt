@@ -1,4 +1,4 @@
-package ru.dm.myapps.clienvk.ui.home_scr
+package ru.dm.myapps.clienvk.presentation.news
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

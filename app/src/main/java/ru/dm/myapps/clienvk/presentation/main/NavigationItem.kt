@@ -1,4 +1,4 @@
-package ru.dm.myapps.clienvk.ui
+package ru.dm.myapps.clienvk.presentation.main
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Favorite

@@ -1,4 +1,4 @@
-package ru.dm.myapps.clienvk.ui.home_scr
+package ru.dm.myapps.clienvk.presentation.news
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -16,11 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.dm.myapps.clienvk.domain.FeedPost
-import ru.dm.myapps.clienvk.ui.state.NewsFeedScreenState
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen(onCommentsItemClickListener: (FeedPost) -> Unit) {
+fun NewsFeed(onCommentsItemClickListener: (FeedPost) -> Unit) {
     val viewModel: NewsFeedViewModel = viewModel()
 
     val state = viewModel.screenState.observeAsState(NewsFeedScreenState.Initial)

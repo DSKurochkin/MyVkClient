@@ -1,4 +1,4 @@
-package ru.dm.myapps.clienvk.ui.favorite_scr
+package ru.dm.myapps.clienvk.presentation.un_use
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

@@ -1,4 +1,4 @@
-package ru.dm.myapps.clienvk.ui.home_scr
+package ru.dm.myapps.clienvk.presentation.news
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import ru.dm.myapps.clienvk.domain.FeedPost
 import ru.dm.myapps.clienvk.domain.StatisticItem
 import ru.dm.myapps.clienvk.domain.StatisticType
-import ru.dm.myapps.clienvk.ui.state.NewsFeedScreenState
 import ru.dm.myapps.clienvk.utils.genFeedPost
 
 class NewsFeedViewModel : ViewModel() {

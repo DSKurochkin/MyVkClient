@@ -7,4 +7,5 @@
     <string name="icon_nav_home">Home</string>
     <string name="icon_nav_favorite">Favorite</string>
     <string name="icon_nav_profile">Profile</string>
+    <integer name="com_vk_sdk_AppId">51753462</integer>
 </resources>

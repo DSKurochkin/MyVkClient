@@ -1,4 +1,4 @@
-package ru.dm.myapps.clienvk.ui.state
+package ru.dm.myapps.clienvk.presentation.news
 
 import ru.dm.myapps.clienvk.domain.FeedPost
 

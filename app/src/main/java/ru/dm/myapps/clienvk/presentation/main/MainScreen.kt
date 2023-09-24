@@ -1,4 +1,4 @@
-package ru.dm.myapps.clienvk.ui
+package ru.dm.myapps.clienvk.presentation.main
 
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
@@ -19,10 +19,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.dm.myapps.clienvk.navigation.AppNavGraph
 import ru.dm.myapps.clienvk.navigation.NavigationState
 import ru.dm.myapps.clienvk.navigation.rememberNavigationState
-import ru.dm.myapps.clienvk.ui.comment_scr.CommentsScreen
-import ru.dm.myapps.clienvk.ui.favorite_scr.FavoriteScreen
-import ru.dm.myapps.clienvk.ui.home_scr.HomeScreen
-import ru.dm.myapps.clienvk.ui.profile_scr.ProfileScreen
+import ru.dm.myapps.clienvk.presentation.comment.CommentsScreen
+import ru.dm.myapps.clienvk.presentation.news.NewsFeed
+import ru.dm.myapps.clienvk.presentation.un_use.FavoriteScreen
+import ru.dm.myapps.clienvk.presentation.un_use.ProfileScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -37,7 +37,7 @@ fun MainScreen() {
         AppNavGraph(
             navHostController = navigationState.navHostController,
             newsFeedScreenCallback = {
-                HomeScreen(onCommentsItemClickListener = { post ->
+                NewsFeed(onCommentsItemClickListener = { post ->
                     navigationState.navigateToComment(post)
                 })
             },

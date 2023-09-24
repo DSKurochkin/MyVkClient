@@ -1,4 +1,4 @@
-package ru.dm.myapps.clienvk.ui.comment_scr
+package ru.dm.myapps.clienvk.presentation.comment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

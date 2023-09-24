@@ -1,4 +1,4 @@
-package ru.dm.myapps.clienvk.ui.comment_scr
+package ru.dm.myapps.clienvk.presentation.comment
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.dm.myapps.clienvk.domain.Comment
 import ru.dm.myapps.clienvk.domain.FeedPost
-import ru.dm.myapps.clienvk.ui.state.CommentsScreenState
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)

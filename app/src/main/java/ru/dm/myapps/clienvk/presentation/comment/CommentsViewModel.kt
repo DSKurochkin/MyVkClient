@@ -1,11 +1,10 @@
-package ru.dm.myapps.clienvk.ui.comment_scr
+package ru.dm.myapps.clienvk.presentation.comment
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ru.dm.myapps.clienvk.domain.Comment
 import ru.dm.myapps.clienvk.domain.FeedPost
-import ru.dm.myapps.clienvk.ui.state.CommentsScreenState
 import ru.dm.myapps.clienvk.utils.genComment
 
 class CommentsViewModel(
