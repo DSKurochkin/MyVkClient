@@ -6,17 +6,11 @@ import androidx.lifecycle.ViewModel
 import ru.dm.myapps.clienvk.domain.FeedPost
 import ru.dm.myapps.clienvk.domain.StatisticItem
 import ru.dm.myapps.clienvk.domain.StatisticType
-import ru.dm.myapps.clienvk.utils.genFeedPost
 
 class NewsFeedViewModel : ViewModel() {
-    val posts = mutableListOf<FeedPost>().apply {
-        add(FeedPost())
-        repeat(20) {
-            add(genFeedPost(it))
-        }
-    }
 
-    private val initialState = NewsFeedScreenState.Posts(posts)
+    private val initialState = NewsFeedScreenState.Initial
+
 
     private val _screenState = MutableLiveData<NewsFeedScreenState>(initialState)
     val screenState: LiveData<NewsFeedScreenState>

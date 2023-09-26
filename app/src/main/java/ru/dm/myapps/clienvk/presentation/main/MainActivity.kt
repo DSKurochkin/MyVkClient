@@ -44,41 +44,16 @@ class MainActivity : ComponentActivity() {
                         }
 
                         is AuthState.NotAuthorized -> LoginScreen {
-                            launcher.launch(listOf(VKScope.WALL))
+                            launcher.launch(listOf(VKScope.WALL, VKScope.FRIENDS))
                         }
 
                         is AuthState -> LoginScreen {
-
                         }
 
                         else -> {}
                     }
-
                 }
-
-
             }
         }
     }
 }
-
-
-/*
-*
-*  val launcher = rememberLauncherForActivityResult(
-        contract = VK.getVKAuthActivityResultContract(),
-        onResult = {
-            if (it is VKAuthenticationResult.Success) {
-                viewModel.login()
-            }
-        }
-    )
-
-    when(state.value){
-        is AuthState.Authorized -> {
-            MainScreen()
-            return
-        }
-        is AuthState.NotAuthorized -> {}
-        else -> {throw RuntimeException("unknown exception")}
-    }*/

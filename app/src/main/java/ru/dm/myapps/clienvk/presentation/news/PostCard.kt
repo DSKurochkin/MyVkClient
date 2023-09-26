@@ -1,6 +1,5 @@
 package ru.dm.myapps.clienvk.presentation.news
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.Card
@@ -26,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import ru.dm.myapps.clienvk.R
 import ru.dm.myapps.clienvk.domain.FeedPost
 import ru.dm.myapps.clienvk.domain.StatisticItem
@@ -77,11 +78,10 @@ private fun PostHeader(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Icon(
+        AsyncImage(
             modifier = Modifier.size(50.dp),
-            painter = painterResource(id = feedPost.avatarResId),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurface
+            model = feedPost.communityImageUrl,
+            contentDescription = null
         )
         Spacer(modifier = Modifier.width(3.dp))
         Column(
@@ -118,12 +118,12 @@ private fun PostText(
 private fun MainImage(
     feedPost: FeedPost
 ) {
-    Image(
-        painter = painterResource(feedPost.contentImageResId),
+    AsyncImage(
+        model = feedPost.contentImageUrl,
         contentDescription = null,
         modifier = Modifier
             .fillMaxWidth()
-            .height(450.dp)
+            .wrapContentHeight()
     )
     PostSpacer(15.dp)
 
