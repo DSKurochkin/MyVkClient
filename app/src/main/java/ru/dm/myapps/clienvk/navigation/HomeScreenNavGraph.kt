@@ -8,6 +8,7 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.google.gson.Gson
 import ru.dm.myapps.clienvk.domain.FeedPost
+import ru.dm.myapps.clienvk.utils.genFeedPost
 
 
 fun NavGraphBuilder.HomeScreenNavGraph(
@@ -33,7 +34,7 @@ fun NavGraphBuilder.HomeScreenNavGraph(
             val json = it.arguments?.getString(Screen.KEY_POST)
                 ?: throw IllegalArgumentException("Post is null")
             val post = Gson().fromJson(json, FeedPost::class.java)
-            commentsScreenCallback(FeedPost(id = post.id))
+            commentsScreenCallback(genFeedPost())
         }
     }
 }

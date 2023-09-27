@@ -5,12 +5,15 @@ import ru.dm.myapps.clienvk.domain.Comment
 import ru.dm.myapps.clienvk.domain.FeedPost
 import kotlin.random.Random
 
-fun genFeedPost(id: Int): FeedPost {
+fun genFeedPost(): FeedPost {
     return FeedPost(
-        id = id + 10,
-        communityName = "Football community ${Random.nextInt(1000)}",
+        id = "404",
+        communityName = "Football community",
         publicationDate = genTime(),
-        contentText = genText(),
+        communityImageUrl = "errorUrl",
+        contentText = "Some context text. Some context text. Some context text",
+        contentImageUrl = "errorUrl2",
+        statisticItems = mapOf()
     )
 }
 

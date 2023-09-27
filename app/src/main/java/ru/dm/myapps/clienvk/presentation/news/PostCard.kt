@@ -45,7 +45,6 @@ fun PostCard(
     Card(
         modifier = modifier
             .fillMaxHeight()
-
     ) {
         Column(
             modifier = Modifier
@@ -75,7 +74,7 @@ private fun PostHeader(
     feedPost: FeedPost
 ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.Top,
         modifier = Modifier.fillMaxWidth()
     ) {
         AsyncImage(
@@ -83,7 +82,7 @@ private fun PostHeader(
             model = feedPost.communityImageUrl,
             contentDescription = null
         )
-        Spacer(modifier = Modifier.width(3.dp))
+        Spacer(modifier = Modifier.width(12.dp))
         Column(
             modifier = Modifier.weight(1f)
         ) {

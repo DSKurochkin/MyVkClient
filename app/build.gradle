@@ -70,6 +70,14 @@ dependencies {
     implementation 'com.vk:android-sdk-core:4.0.1'
     implementation 'com.vk:android-sdk-api:4.0.1'
 
+    //internet
+
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
+
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.7.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.7.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

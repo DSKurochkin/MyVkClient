@@ -19,7 +19,8 @@ private val LightColorScheme = lightColorScheme(
     onPrimary = Black900,
     onSecondary = Black500,
     onSurface = Color.Black,
-    onTertiary = Color.Yellow
+    onTertiary = Color.Yellow,
+    onSecondaryContainer = LightGray
 )
 
 private val DarkColorScheme = darkColorScheme(
@@ -29,14 +30,13 @@ private val DarkColorScheme = darkColorScheme(
     onPrimary = Color.White,
     onSecondary = Black500,
     onSurface = Color.White,
-    onTertiary = Color.Green
+    onTertiary = Color.Green,
+    onSecondaryContainer = Black700
 )
 
 @Composable
 fun ClienVKTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
 
