@@ -1,11 +1,14 @@
 package ru.dm.myapps.clienvk.domain
 
+import kotlin.random.Random
+
 data class FeedPost(
     val id: String,
     val communityName: String,
     val publicationDate: String,
     val communityImageUrl: String,
     val contentText: String,
+    val isFavorite: Boolean = Random.nextBoolean(),
     val contentImageUrl: String?,
     val statisticItems: Map<StatisticType, StatisticItem>
 )

@@ -19,7 +19,10 @@ import ru.dm.myapps.clienvk.domain.FeedPost
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun NewsFeed(onCommentsItemClickListener: (FeedPost) -> Unit) {
+fun NewsFeed(
+    onCommentsItemClickListener: (FeedPost) -> Unit,
+    paddingValues: PaddingValues
+) {
     val viewModel: NewsFeedViewModel = viewModel()
 
     val state = viewModel.screenState.observeAsState(NewsFeedScreenState.Initial)
@@ -29,7 +32,8 @@ fun NewsFeed(onCommentsItemClickListener: (FeedPost) -> Unit) {
         is NewsFeedScreenState.Posts -> Posts(
             viewModel = viewModel,
             posts = currentState.posts,
-            onCommentsItemClickListener
+            onCommentsItemClickListener = onCommentsItemClickListener,
+            paddingValues = paddingValues
         )
 
         is NewsFeedScreenState.Initial -> {}
@@ -42,10 +46,12 @@ fun NewsFeed(onCommentsItemClickListener: (FeedPost) -> Unit) {
 fun Posts(
     viewModel: NewsFeedViewModel,
     posts: List<FeedPost>,
-    onCommentsItemClickListener: (FeedPost) -> Unit
+    onCommentsItemClickListener: (FeedPost) -> Unit,
+    paddingValues: PaddingValues
 ) {
 
     LazyColumn(
+        modifier = Modifier.padding(paddingValues),
         contentPadding = PaddingValues(
             top = 16.dp,
             start = 8.dp,
@@ -65,19 +71,19 @@ fun Posts(
                 background = { },
                 dismissContent = {
                     PostCard(
-                        modifier = Modifier.padding(10.dp),
                         feedPost = feedPost,
                         onViewsItemClickListener = { viewModel.updateFeedPost(it, feedPost) },
                         onSharedItemClickListener = { viewModel.updateFeedPost(it, feedPost) },
                         onCommentsItemClickListener = { onCommentsItemClickListener(feedPost) },
-                        onLikeItemClickListener = { viewModel.updateFeedPost(it, feedPost) }
+                        onLikeItemClickListener = { viewModel.updateFeedPost(it, feedPost) },
+                        isFavourite = feedPost.isFavorite
                     )
                 },
                 directions = setOf(DismissDirection.EndToStart)
             )
         }
 
-
     }
 
 }
+

@@ -1,27 +1,29 @@
 package ru.dm.myapps.clienvk.presentation.news
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -31,6 +33,7 @@ import ru.dm.myapps.clienvk.R
 import ru.dm.myapps.clienvk.domain.FeedPost
 import ru.dm.myapps.clienvk.domain.StatisticItem
 import ru.dm.myapps.clienvk.domain.StatisticType
+import ru.dm.myapps.clienvk.ui.theme.RedHeart
 
 @Composable
 fun PostCard(
@@ -39,19 +42,20 @@ fun PostCard(
     onViewsItemClickListener: (StatisticType) -> Unit,
     onSharedItemClickListener: (StatisticType) -> Unit,
     onCommentsItemClickListener: (StatisticType) -> Unit,
-    onLikeItemClickListener: (StatisticType) -> Unit
+    onLikeItemClickListener: (StatisticType) -> Unit,
+    isFavourite: Boolean
 ) {
 
     Card(
-        modifier = modifier
-            .fillMaxHeight()
+        modifier = modifier,
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 4.dp
+        )
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-
-
+                .padding(8.dp)
+            //  .background(MaterialTheme.colorScheme.background)
         ) {
 
             PostHeader(feedPost)
@@ -62,7 +66,8 @@ fun PostCard(
                 onViewsClickListener = onViewsItemClickListener,
                 onSharedClickListener = onSharedItemClickListener,
                 onCommentClickListener = onCommentsItemClickListener,
-                onLikeClickListener = onLikeItemClickListener
+                onLikeClickListener = onLikeItemClickListener,
+                isFavourite = isFavourite
             )
         }
     }
@@ -122,7 +127,8 @@ private fun MainImage(
         contentDescription = null,
         modifier = Modifier
             .fillMaxWidth()
-            .wrapContentHeight()
+            .wrapContentHeight(),
+        contentScale = ContentScale.FillWidth
     )
     PostSpacer(15.dp)
 
@@ -134,9 +140,11 @@ private fun Statistic(
     onViewsClickListener: (StatisticType) -> Unit,
     onSharedClickListener: (StatisticType) -> Unit,
     onCommentClickListener: (StatisticType) -> Unit,
-    onLikeClickListener: (StatisticType) -> Unit
+    onLikeClickListener: (StatisticType) -> Unit,
+    isFavourite: Boolean
 
 ) {
+
     Row(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -145,7 +153,7 @@ private fun Statistic(
         ) {
             IconWithText(
                 iconResId = R.drawable.eye_24,
-                text = statisticItems[StatisticType.VIEWS]?.count.toString(),
+                text = convertCountToViewLayer(statisticItems[StatisticType.VIEWS]?.count ?: 0),
                 onClickListener = { onViewsClickListener(StatisticType.VIEWS) }
             )
         }
@@ -155,18 +163,23 @@ private fun Statistic(
         ) {
             IconWithText(
                 iconResId = R.drawable.share,
-                text = statisticItems[StatisticType.SHARES]?.count.toString(),
+                text = convertCountToViewLayer(statisticItems[StatisticType.SHARES]?.count ?: 0),
                 onClickListener = { onSharedClickListener(StatisticType.SHARES) }
             )
             IconWithText(
                 iconResId = R.drawable.comment_24,
-                text = statisticItems[StatisticType.COMMENTS]?.count.toString(),
+                text = convertCountToViewLayer(statisticItems[StatisticType.COMMENTS]?.count ?: 0),
                 onClickListener = { onCommentClickListener(StatisticType.COMMENTS) }
             )
             IconWithText(
-                iconResId = R.drawable.like_106,
-                text = statisticItems[StatisticType.LIKES]?.count.toString(),
-                onClickListener = { onLikeClickListener(StatisticType.LIKES) }
+                iconResId = if (isFavourite) {
+                    R.drawable.like_filled
+                } else {
+                    R.drawable.like_106
+                },
+                text = convertCountToViewLayer(statisticItems[StatisticType.LIKES]?.count ?: 0),
+                onClickListener = { onLikeClickListener(StatisticType.LIKES) },
+                tint = if (isFavourite) RedHeart else MaterialTheme.colorScheme.onSurface
             )
         }
     }
@@ -176,7 +189,8 @@ private fun Statistic(
 private fun IconWithText(
     iconResId: Int,
     text: String,
-    onClickListener: () -> Unit
+    onClickListener: () -> Unit,
+    tint: Color = MaterialTheme.colorScheme.onSurface
 ) {
     Row(
         modifier = Modifier
@@ -186,17 +200,28 @@ private fun IconWithText(
     ) {
         Text(text = text)
         Spacer(Modifier.width(2.dp))
-        Icon(painterResource(id = iconResId), contentDescription = null)
+        Icon(
+            modifier = Modifier.size(24.dp),
+            painter = painterResource(id = iconResId),
+            contentDescription = null,
+            tint = tint
+        )
         Spacer(Modifier.width(5.dp))
     }
 
 }
 
 @Composable
-private fun PostSpacer(height: Dp = 4.dp) {
+private fun PostSpacer(height: Dp = 8.dp) {
     Spacer(modifier = Modifier.height(height))
 }
 
 
-
-
+private fun convertCountToViewLayer(count: Int): String {
+    return if (count > 100_000)
+        "${count / 1000}K"
+    else if (count > 1000)
+        String.format("%.1fK", count / 1000f)
+    else
+        "$count"
+}

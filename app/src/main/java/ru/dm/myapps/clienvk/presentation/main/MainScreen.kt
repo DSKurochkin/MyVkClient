@@ -33,13 +33,16 @@ fun MainScreen() {
     Scaffold(
         bottomBar = { BottomBar(navigationState) },
 
-        ) {
+        ) { paddingValues ->
         AppNavGraph(
             navHostController = navigationState.navHostController,
             newsFeedScreenCallback = {
-                NewsFeed(onCommentsItemClickListener = { post ->
-                    navigationState.navigateToComment(post)
-                })
+                NewsFeed(
+                    onCommentsItemClickListener = { post ->
+                        navigationState.navigateToComment(post)
+                    },
+                    paddingValues
+                )
             },
             favoriteScreensCallback = { FavoriteScreen() },
             profileScreenCallback = { ProfileScreen() },
