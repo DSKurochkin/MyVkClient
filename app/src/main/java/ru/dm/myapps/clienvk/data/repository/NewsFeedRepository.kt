@@ -1,9 +1,11 @@
 package ru.dm.myapps.clienvk.data.repository
 
 import android.app.Application
+import android.util.Log
 import com.vk.api.sdk.VKPreferencesKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
 import ru.dm.myapps.clienvk.data.mapper.NewsFeedMapper
+import ru.dm.myapps.clienvk.data.model.newsfeed.NewsFeedResponseDto
 import ru.dm.myapps.clienvk.data.network.ApiFactory
 import ru.dm.myapps.clienvk.data.network.ApiService
 import ru.dm.myapps.clienvk.domain.FeedPost
@@ -16,14 +18,33 @@ class NewsFeedRepository(private val application: Application) {
 
     private val api: ApiService = ApiFactory.apiService
     private val mapper = NewsFeedMapper()
+    private var nextFrom: String? = null
 
     private val _posts = mutableListOf<FeedPost>()
     val posts: List<FeedPost>
         get() = _posts.toList()
 
     suspend fun loadNews() {
+        val startFrom = nextFrom
 
-        _posts.addAll(mapper.responseToPosts(api.loadNews(token.accessToken)))
+        if (startFrom == null && posts.isNotEmpty()) return
+        val response: NewsFeedResponseDto = if (startFrom == null) {
+            api.loadNews(token.accessToken)
+        } else {
+            Log.d("loadNews", startFrom)
+            api.loadNews(token.accessToken, startFrom)
+        }
+        //
+        response.content.posts.forEach {
+            Log.d(
+                "loadNews",
+                " Post - postId = ${it.id} and sourceID = ${it.sourceId}"
+            )
+        }
+        //
+        nextFrom = response.content.nextFrom
+        _posts.addAll(mapper.responseToPosts(response))
+        Log.d("loadNews", "-------------------------------------------------")
     }
 
     suspend fun changeLikeStatus(post: FeedPost) {

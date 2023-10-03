@@ -6,6 +6,7 @@ sealed class NewsFeedScreenState {
 
     object Initial : NewsFeedScreenState()
 
-    data class Posts(var posts: List<FeedPost>) : NewsFeedScreenState()
+    data class Posts(var posts: List<FeedPost>, var isLoading: Boolean = false) :
+        NewsFeedScreenState()
 
 }
