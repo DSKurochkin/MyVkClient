@@ -30,7 +30,6 @@ private fun BottomBar() {
                     null
                 )
             }
-            // Spacer(modifier = Modifier.height(1.dp))
             Text(text = "News")
         }
         Icon(painter = painterResource(id = R.drawable.like_106), contentDescription = null)

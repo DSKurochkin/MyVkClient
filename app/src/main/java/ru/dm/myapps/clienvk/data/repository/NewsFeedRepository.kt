@@ -1,7 +1,6 @@
 package ru.dm.myapps.clienvk.data.repository
 
 import android.app.Application
-import android.util.Log
 import com.vk.api.sdk.VKPreferencesKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
 import ru.dm.myapps.clienvk.data.mapper.NewsFeedMapper
@@ -26,25 +25,14 @@ class NewsFeedRepository(private val application: Application) {
 
     suspend fun loadNews() {
         val startFrom = nextFrom
-
         if (startFrom == null && posts.isNotEmpty()) return
         val response: NewsFeedResponseDto = if (startFrom == null) {
             api.loadNews(token.accessToken)
         } else {
-            Log.d("loadNews", startFrom)
             api.loadNews(token.accessToken, startFrom)
         }
-        //
-        response.content.posts.forEach {
-            Log.d(
-                "loadNews",
-                " Post - postId = ${it.id} and sourceID = ${it.sourceId}"
-            )
-        }
-        //
         nextFrom = response.content.nextFrom
         _posts.addAll(mapper.responseToPosts(response))
-        Log.d("loadNews", "-------------------------------------------------")
     }
 
     suspend fun changeLikeStatus(post: FeedPost) {

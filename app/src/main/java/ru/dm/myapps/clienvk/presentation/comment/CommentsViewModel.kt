@@ -27,8 +27,4 @@ class CommentsViewModel(
     init {
         loadComments(post)
     }
-
-//    fun loadComments(post: FeedPost, comments:List<Comment>){
-//        _commentsScreenState.value = CommentsScreenState.Comments(post, comments)
-//    }
 }

@@ -55,7 +55,6 @@ fun PostCard(
         Column(
             modifier = Modifier
                 .padding(8.dp)
-            //  .background(MaterialTheme.colorScheme.background)
         ) {
 
             PostHeader(feedPost)
