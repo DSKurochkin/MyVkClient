@@ -1,6 +1,6 @@
 package ru.dm.myapps.clienvk.data.mapper
 
-import ru.dm.myapps.clienvk.data.model.NewsFeedResponseDto
+import ru.dm.myapps.clienvk.data.model.newsfeed.NewsFeedResponseDto
 import ru.dm.myapps.clienvk.domain.FeedPost
 import ru.dm.myapps.clienvk.domain.StatisticItem
 import ru.dm.myapps.clienvk.domain.StatisticType
@@ -18,12 +18,14 @@ class NewsFeedMapper {
             val groupDto = dtoGroups.find { it.id == postDto.sourceId.absoluteValue } ?: continue
             val post = FeedPost(
                 id = postDto.id,
+                sourceId = postDto.sourceId,
                 communityName = groupDto.name,
                 publicationDate = convertDate(postDto.date),
                 communityImageUrl = groupDto.imageUrl,
                 contentText = postDto.text,
+                isLiked = postDto.likes.userLikes > 0,
                 contentImageUrl = postDto.attachments
-                    .firstOrNull()
+                    ?.firstOrNull()
                     ?.photo
                     ?.photoUrls
                     ?.lastOrNull()

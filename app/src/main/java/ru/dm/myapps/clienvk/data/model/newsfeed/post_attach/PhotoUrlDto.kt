@@ -1,4 +1,4 @@
-package ru.dm.myapps.clienvk.data.model.post_attach
+package ru.dm.myapps.clienvk.data.model.newsfeed.post_attach
 
 import com.google.gson.annotations.SerializedName
 

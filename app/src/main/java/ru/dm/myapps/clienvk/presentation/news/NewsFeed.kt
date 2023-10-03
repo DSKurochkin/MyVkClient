@@ -75,8 +75,8 @@ fun Posts(
                         onViewsItemClickListener = { viewModel.updateFeedPost(it, feedPost) },
                         onSharedItemClickListener = { viewModel.updateFeedPost(it, feedPost) },
                         onCommentsItemClickListener = { onCommentsItemClickListener(feedPost) },
-                        onLikeItemClickListener = { viewModel.updateFeedPost(it, feedPost) },
-                        isFavourite = feedPost.isFavorite
+                        onLikeItemClickListener = { viewModel.changeLikeStatus(feedPost) },
+                        isFavourite = feedPost.isLiked
                     )
                 },
                 directions = setOf(DismissDirection.EndToStart)

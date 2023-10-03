@@ -7,12 +7,14 @@ import kotlin.random.Random
 
 fun genFeedPost(): FeedPost {
     return FeedPost(
-        id = "404",
+        id = 404,
+        sourceId = 505,
         communityName = "Football community",
         publicationDate = genTime(),
         communityImageUrl = "errorUrl",
+        isLiked = true,
         contentText = "Some context text. Some context text. Some context text",
-        contentImageUrl = "errorUrl2",
+        contentImageUrl = "sampleUrl2",
         statisticItems = mapOf()
     )
 }

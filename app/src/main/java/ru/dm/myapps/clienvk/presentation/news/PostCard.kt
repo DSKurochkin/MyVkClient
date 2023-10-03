@@ -42,7 +42,7 @@ fun PostCard(
     onViewsItemClickListener: (StatisticType) -> Unit,
     onSharedItemClickListener: (StatisticType) -> Unit,
     onCommentsItemClickListener: (StatisticType) -> Unit,
-    onLikeItemClickListener: (StatisticType) -> Unit,
+    onLikeItemClickListener: () -> Unit,
     isFavourite: Boolean
 ) {
 
@@ -140,7 +140,7 @@ private fun Statistic(
     onViewsClickListener: (StatisticType) -> Unit,
     onSharedClickListener: (StatisticType) -> Unit,
     onCommentClickListener: (StatisticType) -> Unit,
-    onLikeClickListener: (StatisticType) -> Unit,
+    onLikeClickListener: () -> Unit,
     isFavourite: Boolean
 
 ) {
@@ -178,7 +178,7 @@ private fun Statistic(
                     R.drawable.like_106
                 },
                 text = convertCountToViewLayer(statisticItems[StatisticType.LIKES]?.count ?: 0),
-                onClickListener = { onLikeClickListener(StatisticType.LIKES) },
+                onClickListener = { onLikeClickListener() },
                 tint = if (isFavourite) RedHeart else MaterialTheme.colorScheme.onSurface
             )
         }
