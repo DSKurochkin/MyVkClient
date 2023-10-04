@@ -39,17 +39,15 @@ import ru.dm.myapps.clienvk.ui.theme.RedHeart
 fun PostCard(
     modifier: Modifier = Modifier,
     feedPost: FeedPost,
-    onViewsItemClickListener: (StatisticType) -> Unit,
-    onSharedItemClickListener: (StatisticType) -> Unit,
     onCommentsItemClickListener: (StatisticType) -> Unit,
     onLikeItemClickListener: () -> Unit,
-    isFavourite: Boolean
+    isLiked: Boolean
 ) {
-
     Card(
         modifier = modifier,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 4.dp
+            defaultElevation = 4.dp,
         )
     ) {
         Column(
@@ -62,15 +60,12 @@ fun PostCard(
             MainImage(feedPost)
             Statistic(
                 statisticItems = feedPost.statisticItems,
-                onViewsClickListener = onViewsItemClickListener,
-                onSharedClickListener = onSharedItemClickListener,
                 onCommentClickListener = onCommentsItemClickListener,
                 onLikeClickListener = onLikeItemClickListener,
-                isFavourite = isFavourite
+                isFavourite = isLiked
             )
         }
     }
-
 }
 
 @Composable
@@ -113,8 +108,9 @@ private fun PostText(
     Text(
         text = feedPost.contentText
     )
-
-    PostSpacer(8.dp)
+    if(feedPost.contentText.isNotBlank()) {
+        PostSpacer()
+    }
 }
 
 @Composable
@@ -130,14 +126,11 @@ private fun MainImage(
         contentScale = ContentScale.FillWidth
     )
     PostSpacer(15.dp)
-
 }
 
 @Composable
 private fun Statistic(
     statisticItems: Map<StatisticType, StatisticItem>,
-    onViewsClickListener: (StatisticType) -> Unit,
-    onSharedClickListener: (StatisticType) -> Unit,
     onCommentClickListener: (StatisticType) -> Unit,
     onLikeClickListener: () -> Unit,
     isFavourite: Boolean
@@ -152,8 +145,7 @@ private fun Statistic(
         ) {
             IconWithText(
                 iconResId = R.drawable.eye_24,
-                text = convertCountToViewLayer(statisticItems[StatisticType.VIEWS]?.count ?: 0),
-                onClickListener = { onViewsClickListener(StatisticType.VIEWS) }
+                text = convertCountToViewLayer(statisticItems[StatisticType.VIEWS]?.count ?: 0)
             )
         }
 
@@ -162,8 +154,8 @@ private fun Statistic(
         ) {
             IconWithText(
                 iconResId = R.drawable.share,
-                text = convertCountToViewLayer(statisticItems[StatisticType.SHARES]?.count ?: 0),
-                onClickListener = { onSharedClickListener(StatisticType.SHARES) }
+                text = convertCountToViewLayer(statisticItems[StatisticType.SHARES]?.count ?: 0)
+
             )
             IconWithText(
                 iconResId = R.drawable.comment_24,
@@ -188,13 +180,18 @@ private fun Statistic(
 private fun IconWithText(
     iconResId: Int,
     text: String,
-    onClickListener: () -> Unit,
+    onClickListener: (() -> Unit)? = null,
     tint: Color = MaterialTheme.colorScheme.onSurface
 ) {
-    Row(
-        modifier = Modifier
+    val modifier: Modifier = if (onClickListener == null) {
+        Modifier
+    } else {
+        Modifier
             .fillMaxHeight()
-            .clickable { onClickListener() },
+            .clickable { onClickListener() }
+    }
+    Row(
+        modifier = modifier,
         verticalAlignment = Alignment.Top,
     ) {
         Text(text = text)
@@ -205,13 +202,13 @@ private fun IconWithText(
             contentDescription = null,
             tint = tint
         )
-        Spacer(Modifier.width(5.dp))
+        PostSpacer(5.dp)
     }
 
 }
 
 @Composable
-private fun PostSpacer(height: Dp = 8.dp) {
+private fun PostSpacer(height: Dp = 6.dp) {
     Spacer(modifier = Modifier.height(height))
 }
 

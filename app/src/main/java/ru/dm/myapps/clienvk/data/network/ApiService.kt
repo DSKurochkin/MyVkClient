@@ -3,7 +3,9 @@ package ru.dm.myapps.clienvk.data.network
 import retrofit2.http.GET
 import retrofit2.http.Query
 import ru.dm.myapps.clienvk.data.model.like.LikeResponse
+import ru.dm.myapps.clienvk.data.model.newsfeed.LikesDto
 import ru.dm.myapps.clienvk.data.model.newsfeed.NewsFeedResponseDto
+import ru.dm.myapps.clienvk.data.model.newsfeed.RepostDto
 
 interface ApiService {
 
@@ -33,4 +35,11 @@ interface ApiService {
         @Query("owner_id") ownerId: Long,
         @Query("item_id") itemId: Long
     ): LikeResponse
+
+    @GET("newsfeed.ignoreItem?type=wall&v=5.150")
+    suspend fun ignorePost(
+        @Query("access_token") token: String,
+        @Query("owner_id") ownerId: Long,
+        @Query("item_id") itemId: Long
+    ): RepostDto
 }

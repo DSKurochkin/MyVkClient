@@ -57,4 +57,10 @@ class NewsFeedRepository(private val application: Application) {
         val newPost = post.copy(statisticItems = newStatistic, isLiked = !post.isLiked)
         _posts[_posts.indexOf(post)] = newPost
     }
+
+    suspend fun ignorePost(post: FeedPost) {
+        _posts.remove(post)
+        api.ignorePost(token.accessToken, post.sourceId, post.id)
+
+    }
 }

@@ -14,15 +14,14 @@ import ru.dm.myapps.clienvk.domain.StatisticType
 class NewsFeedViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = NewsFeedRepository(application)
     private val initialState = NewsFeedScreenState.Initial
-
-    init {
-        loadNews()
-    }
-
-
     private val _screenState = MutableLiveData<NewsFeedScreenState>(initialState)
     val screenState: LiveData<NewsFeedScreenState>
         get() = _screenState
+
+    init {
+        _screenState.value = NewsFeedScreenState.Loading
+        loadNews()
+    }
 
     private fun loadNews() {
         viewModelScope.launch {
@@ -58,12 +57,10 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun delete(feedPost: FeedPost) {
-        val currentState = _screenState.value
-        if (currentState !is NewsFeedScreenState.Posts) return
-        val modifyPosts = currentState.posts.toMutableList()
-        modifyPosts.remove(feedPost)
-        _screenState.value = NewsFeedScreenState.Posts(modifyPosts)
-
+        viewModelScope.launch {
+            repository.ignorePost(feedPost)
+            _screenState.value = NewsFeedScreenState.Posts(repository.posts)
+        }
     }
 
     private fun copyStatistic(
