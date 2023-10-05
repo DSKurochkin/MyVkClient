@@ -2,8 +2,8 @@ package ru.dm.myapps.clienvk.data.network
 
 import retrofit2.http.GET
 import retrofit2.http.Query
+import ru.dm.myapps.clienvk.data.model.comments.CommentsResponse
 import ru.dm.myapps.clienvk.data.model.like.LikeResponse
-import ru.dm.myapps.clienvk.data.model.newsfeed.LikesDto
 import ru.dm.myapps.clienvk.data.model.newsfeed.NewsFeedResponseDto
 import ru.dm.myapps.clienvk.data.model.newsfeed.RepostDto
 
@@ -42,4 +42,11 @@ interface ApiService {
         @Query("owner_id") ownerId: Long,
         @Query("item_id") itemId: Long
     ): RepostDto
+
+    @GET("wall.getComments?v=5.150&sort=desc&extended=1&fields=photo_200")
+    suspend fun getComments(
+        @Query("access_token") token: String,
+        @Query("owner_id") ownerId: Long,
+        @Query("post_id") postId: Long
+    ): CommentsResponse
 }

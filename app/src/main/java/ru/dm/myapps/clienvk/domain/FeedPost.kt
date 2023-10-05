@@ -9,5 +9,7 @@ data class FeedPost(
     val contentText: String,
     val isLiked: Boolean,
     val contentImageUrl: String?,
-    val statisticItems: Map<StatisticType, StatisticItem>
+    val statisticItems: Map<StatisticType, StatisticItem>,
+    var commentsCount: Int = 0,
+    var comments: List<Comment> = listOf()
 )

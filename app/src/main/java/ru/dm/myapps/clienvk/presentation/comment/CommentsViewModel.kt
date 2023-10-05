@@ -1,27 +1,29 @@
 package ru.dm.myapps.clienvk.presentation.comment
 
+import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ru.dm.myapps.clienvk.domain.Comment
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+import ru.dm.myapps.clienvk.data.repository.NewsFeedRepository
 import ru.dm.myapps.clienvk.domain.FeedPost
-import ru.dm.myapps.clienvk.utils.genComment
 
 class CommentsViewModel(
-    post: FeedPost
+    post: FeedPost,
+    application: Application
 ) : ViewModel() {
+    private val repository = NewsFeedRepository(application)
     private var _commentsScreenState =
         MutableLiveData<CommentsScreenState>(CommentsScreenState.Initial)
     val commentsScreenState: LiveData<CommentsScreenState>
         get() = _commentsScreenState
 
-    fun loadComments(post: FeedPost) {
-        val comments = mutableListOf<Comment>().apply {
-            repeat(15) {
-                add(genComment(it))
-            }
+    private fun loadComments(post: FeedPost) {
+        viewModelScope.launch {
+            val comments = repository.getComments(post)
+            _commentsScreenState.value = CommentsScreenState.Comments(post, comments)
         }
-        _commentsScreenState.value = CommentsScreenState.Comments(post, comments)
     }
 
     init {

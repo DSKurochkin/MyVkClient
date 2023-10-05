@@ -50,10 +50,12 @@ fun NewsFeed(
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
-            ){
+            ) {
                 CircularProgressIndicator(color = vkBlue)
             }
         }
+
+        else -> {}
     }
 
 }
@@ -81,7 +83,7 @@ fun Posts(
         items(items = posts, key = { it.id }) { feedPost ->
             val dismissState = rememberDismissState(positionalThreshold = { 100.dp.toPx() })
             if (dismissState.isDismissed(DismissDirection.EndToStart)) {
-                viewModel.delete(feedPost)
+                viewModel.deletePost(feedPost)
             }
             SwipeToDismiss(
                 modifier = Modifier.animateItemPlacement(),
@@ -90,7 +92,9 @@ fun Posts(
                 dismissContent = {
                     PostCard(
                         feedPost = feedPost,
-                        onCommentsItemClickListener = { onCommentsItemClickListener(feedPost) },
+                        onCommentsItemClickListener = {
+                            onCommentsItemClickListener(feedPost)
+                        },
                         onLikeItemClickListener = { viewModel.changeLikeStatus(feedPost) },
                         isLiked = feedPost.isLiked
                     )

@@ -1,6 +1,5 @@
 package ru.dm.myapps.clienvk.utils
 
-import ru.dm.myapps.clienvk.R
 import ru.dm.myapps.clienvk.domain.Comment
 import ru.dm.myapps.clienvk.domain.FeedPost
 import kotlin.random.Random
@@ -23,7 +22,7 @@ fun genComment(id: Int): Comment {
     return Comment(
         id = id,
         authorName = "Author $id",
-        authorAvatarResId = R.drawable.user_455,
+        authorAvatarUrl = "R.drawable.user_455",
         text = genText(),
         publicationDate = genTime()
     )

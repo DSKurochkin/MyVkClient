@@ -39,7 +39,7 @@ import ru.dm.myapps.clienvk.ui.theme.RedHeart
 fun PostCard(
     modifier: Modifier = Modifier,
     feedPost: FeedPost,
-    onCommentsItemClickListener: (StatisticType) -> Unit,
+    onCommentsItemClickListener: () -> Unit,
     onLikeItemClickListener: () -> Unit,
     isLiked: Boolean
 ) {
@@ -108,7 +108,7 @@ private fun PostText(
     Text(
         text = feedPost.contentText
     )
-    if(feedPost.contentText.isNotBlank()) {
+    if (feedPost.contentText.isNotBlank()) {
         PostSpacer()
     }
 }
@@ -131,7 +131,7 @@ private fun MainImage(
 @Composable
 private fun Statistic(
     statisticItems: Map<StatisticType, StatisticItem>,
-    onCommentClickListener: (StatisticType) -> Unit,
+    onCommentClickListener: () -> Unit,
     onLikeClickListener: () -> Unit,
     isFavourite: Boolean
 
@@ -160,7 +160,7 @@ private fun Statistic(
             IconWithText(
                 iconResId = R.drawable.comment_24,
                 text = convertCountToViewLayer(statisticItems[StatisticType.COMMENTS]?.count ?: 0),
-                onClickListener = { onCommentClickListener(StatisticType.COMMENTS) }
+                onClickListener = { onCommentClickListener() }
             )
             IconWithText(
                 iconResId = if (isFavourite) {
