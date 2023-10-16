@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.Card
@@ -22,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -77,9 +79,12 @@ private fun PostHeader(
         modifier = Modifier.fillMaxWidth()
     ) {
         AsyncImage(
-            modifier = Modifier.size(50.dp),
+            modifier = Modifier
+                .size(50.dp)
+                .clip(CircleShape),
             model = feedPost.communityImageUrl,
-            contentDescription = null
+            contentDescription = null,
+            contentScale = ContentScale.Crop
         )
         Spacer(modifier = Modifier.width(12.dp))
         Column(
@@ -137,9 +142,7 @@ private fun Statistic(
 
 ) {
 
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
+    Row {
         Row(
             modifier = Modifier.weight(1f)
         ) {
@@ -150,7 +153,8 @@ private fun Statistic(
         }
 
         Row(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconWithText(
                 iconResId = R.drawable.share,

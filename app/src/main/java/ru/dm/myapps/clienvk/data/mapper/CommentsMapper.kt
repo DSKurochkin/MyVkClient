@@ -10,6 +10,7 @@ class CommentsMapper : AppMapper() {
         val commentsDtos = response.content.comments
         for (dto in commentsDtos) {
             val profile = profilesDtos.find { dto.authorId == it.id } ?: continue
+            if (dto.text.isEmpty()) continue
             res.add(
                 Comment(
                     id = dto.id,

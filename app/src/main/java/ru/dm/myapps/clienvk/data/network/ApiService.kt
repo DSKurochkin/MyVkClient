@@ -43,7 +43,7 @@ interface ApiService {
         @Query("item_id") itemId: Long
     ): RepostDto
 
-    @GET("wall.getComments?v=5.150&sort=desc&extended=1&fields=photo_200")
+    @GET("wall.getComments?v=5.150&sort=desc&extended=1&fields=photo_100&count=20")
     suspend fun getComments(
         @Query("access_token") token: String,
         @Query("owner_id") ownerId: Long,

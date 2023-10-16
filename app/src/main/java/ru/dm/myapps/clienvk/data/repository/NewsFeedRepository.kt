@@ -76,12 +76,14 @@ class NewsFeedRepository(application: Application) {
     }
 
     suspend fun getComments(post: FeedPost): List<Comment> {
+        val response = api.getComments(
+            token.accessToken,
+            post.sourceId,
+            post.id
+        )
+
         return commentMapper.responseToComments(
-            api.getComments(
-                token.accessToken,
-                post.sourceId,
-                post.id
-            )
+            response
         )
     }
 }
