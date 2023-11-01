@@ -2,39 +2,37 @@ package ru.dm.myapps.clienvk.presentation.news
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import ru.dm.myapps.clienvk.data.repository.NewsFeedRepository
 import ru.dm.myapps.clienvk.domain.FeedPost
+import ru.dm.myapps.clienvk.extensions.withFlow
 
 class NewsFeedViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = NewsFeedRepository(application)
-    private val initialState = NewsFeedScreenState.Initial
-    private val _screenState = MutableLiveData<NewsFeedScreenState>(initialState)
-    val screenState: LiveData<NewsFeedScreenState>
-        get() = _screenState
+    private val recommendationStateFlow = repository.newsFlowLoader
 
-    init {
-        _screenState.value = NewsFeedScreenState.Loading
-        loadNews()
-    }
+    private val loadNextDataFlow = MutableSharedFlow<NewsFeedScreenState>()
 
-    private fun loadNews() {
-        viewModelScope.launch {
-            repository.newsFlowLoader
-                .filter { it.isNotEmpty() }
-                .collect {
-                    _screenState.value = NewsFeedScreenState.Posts(it)
-                }
-        }
-    }
+    val screenState = recommendationStateFlow
+        .filter { it.isNotEmpty() }
+        .map { NewsFeedScreenState.Posts(it) as NewsFeedScreenState }
+        .onStart { emit(NewsFeedScreenState.Loading) }
+        .withFlow(loadNextDataFlow)
+
 
     fun loadNextNews() {
-        _screenState.value = NewsFeedScreenState.Posts(repository.posts, true)
         viewModelScope.launch {
+            loadNextDataFlow.emit(
+                NewsFeedScreenState.Posts(
+                    posts = recommendationStateFlow.value,
+                    isLoading = true
+                )
+            )
             repository.loadNextData()
         }
     }
@@ -42,14 +40,14 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
     fun changeLikeStatus(post: FeedPost) {
         viewModelScope.launch {
             repository.changeLikeStatus(post)
-            _screenState.value = NewsFeedScreenState.Posts(repository.posts)
+
         }
     }
 
     fun deletePost(feedPost: FeedPost) {
         viewModelScope.launch {
             repository.ignorePost(feedPost)
-            _screenState.value = NewsFeedScreenState.Posts(repository.posts)
+
         }
     }
 }

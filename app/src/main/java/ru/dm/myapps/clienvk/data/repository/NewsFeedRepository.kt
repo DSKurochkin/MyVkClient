@@ -6,9 +6,9 @@ import com.vk.api.sdk.auth.VKAccessToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import ru.dm.myapps.clienvk.data.mapper.CommentsMapper
@@ -20,6 +20,7 @@ import ru.dm.myapps.clienvk.domain.Comment
 import ru.dm.myapps.clienvk.domain.FeedPost
 import ru.dm.myapps.clienvk.domain.StatisticItem
 import ru.dm.myapps.clienvk.domain.StatisticType
+import ru.dm.myapps.clienvk.extensions.withFlow
 
 class NewsFeedRepository(application: Application) {
     private val storage = VKPreferencesKeyValueStorage(application)
@@ -34,11 +35,7 @@ class NewsFeedRepository(application: Application) {
 
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
 
-    private val nextDataNeededEvents = MutableSharedFlow<Unit>(replay = 1)
-    val posts: List<FeedPost>
-        get() = _posts.toList()
-
-    val newsFlowLoader: Flow<List<FeedPost>> = flow {
+    private val loadedListFlow = flow {
         nextDataNeededEvents.emit(Unit)
         nextDataNeededEvents.collect {
             val startFrom = nextFrom
@@ -60,11 +57,20 @@ class NewsFeedRepository(application: Application) {
             emit(posts)
         }
 
-    }.stateIn(
-        scope = coroutineScope,
-        started = SharingStarted.Lazily,
-        initialValue = posts
-    )
+    }
+
+    private val nextDataNeededEvents = MutableSharedFlow<Unit>(replay = 1)
+    private val refreshListFlow = MutableSharedFlow<List<FeedPost>>()
+    private val posts: List<FeedPost>
+        get() = _posts.toList()
+
+    val newsFlowLoader: StateFlow<List<FeedPost>> = loadedListFlow
+        .withFlow(refreshListFlow)
+        .stateIn(
+            scope = coroutineScope,
+            started = SharingStarted.Lazily,
+            initialValue = posts
+        )
 
     suspend fun changeLikeStatus(post: FeedPost) {
         val response = if (!post.isLiked) {
@@ -87,11 +93,13 @@ class NewsFeedRepository(application: Application) {
         newStatistic.put(StatisticType.LIKES, StatisticItem(StatisticType.LIKES, newLikeCount))
         val newPost = post.copy(statisticItems = newStatistic, isLiked = !post.isLiked)
         _posts[_posts.indexOf(post)] = newPost
+        refreshListFlow.emit(posts)
     }
 
     suspend fun ignorePost(post: FeedPost) {
         _posts.remove(post)
         api.ignorePost(token.accessToken, post.sourceId, post.id)
+        refreshListFlow.emit(posts)
     }
 
     suspend fun loadNextData() {
