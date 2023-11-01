@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import ru.dm.myapps.clienvk.data.repository.NewsFeedRepository
 import ru.dm.myapps.clienvk.domain.FeedPost
@@ -23,14 +24,19 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
 
     private fun loadNews() {
         viewModelScope.launch {
-            repository.loadNews()
-            _screenState.value = NewsFeedScreenState.Posts(repository.posts)
+            repository.newsFlowLoader
+                .filter { it.isNotEmpty() }
+                .collect {
+                    _screenState.value = NewsFeedScreenState.Posts(it)
+                }
         }
     }
 
     fun loadNextNews() {
         _screenState.value = NewsFeedScreenState.Posts(repository.posts, true)
-        loadNews()
+        viewModelScope.launch {
+            repository.loadNextData()
+        }
     }
 
     fun changeLikeStatus(post: FeedPost) {

@@ -10,13 +10,13 @@ import ru.dm.myapps.clienvk.data.model.newsfeed.RepostDto
 interface ApiService {
 
     //@GET("newsfeed.getRecommended?v=5.150")
-    @GET("newsfeed.getRecommended?v=5.150&count=10") //for testing only
+    @GET("newsfeed.getRecommended?v=5.150&count=5") //for testing only
     suspend fun loadNews(
         @Query("access_token") token: String
     ): NewsFeedResponseDto
 
     //@GET("newsfeed.getRecommended?v=5.150")
-    @GET("newsfeed.getRecommended?v=5.150&count=10") //for testing only
+    @GET("newsfeed.getRecommended?v=5.150&count=5") //for testing only
     suspend fun loadNews(
         @Query("access_token") token: String,
         @Query("start_from") startFrom: String?

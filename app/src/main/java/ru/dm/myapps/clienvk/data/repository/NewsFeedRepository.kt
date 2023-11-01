@@ -3,9 +3,16 @@ package ru.dm.myapps.clienvk.data.repository
 import android.app.Application
 import com.vk.api.sdk.VKPreferencesKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.stateIn
 import ru.dm.myapps.clienvk.data.mapper.CommentsMapper
 import ru.dm.myapps.clienvk.data.mapper.NewsFeedMapper
-import ru.dm.myapps.clienvk.data.model.comments.CommentsResponse
 import ru.dm.myapps.clienvk.data.model.newsfeed.NewsFeedResponseDto
 import ru.dm.myapps.clienvk.data.network.ApiFactory
 import ru.dm.myapps.clienvk.data.network.ApiService
@@ -24,20 +31,40 @@ class NewsFeedRepository(application: Application) {
     private var nextFrom: String? = null
 
     private val _posts = mutableListOf<FeedPost>()
+
+    private val coroutineScope = CoroutineScope(Dispatchers.Default)
+
+    private val nextDataNeededEvents = MutableSharedFlow<Unit>(replay = 1)
     val posts: List<FeedPost>
         get() = _posts.toList()
 
-    suspend fun loadNews() {
-        val startFrom = nextFrom
-        if (startFrom == null && posts.isNotEmpty()) return
-        val response: NewsFeedResponseDto = if (startFrom == null) {
-            api.loadNews(token.accessToken)
-        } else {
-            api.loadNews(token.accessToken, startFrom)
+    val newsFlowLoader: Flow<List<FeedPost>> = flow {
+        nextDataNeededEvents.emit(Unit)
+        nextDataNeededEvents.collect {
+            val startFrom = nextFrom
+            if (startFrom == null && posts.isNotEmpty()) {
+                emit(posts)
+                return@collect
+            }
+
+            val response: NewsFeedResponseDto = if (startFrom == null) {
+                api.loadNews(token.accessToken)
+            } else {
+                //for visible progress in testing
+                delay(2000)
+                //
+                api.loadNews(token.accessToken, startFrom)
+            }
+            nextFrom = response.content.nextFrom
+            _posts.addAll(postMapper.responseToPosts(response))
+            emit(posts)
         }
-        nextFrom = response.content.nextFrom
-        _posts.addAll(postMapper.responseToPosts(response))
-    }
+
+    }.stateIn(
+        scope = coroutineScope,
+        started = SharingStarted.Lazily,
+        initialValue = posts
+    )
 
     suspend fun changeLikeStatus(post: FeedPost) {
         val response = if (!post.isLiked) {
@@ -67,12 +94,8 @@ class NewsFeedRepository(application: Application) {
         api.ignorePost(token.accessToken, post.sourceId, post.id)
     }
 
-    private suspend fun getCommentsResponse(post: FeedPost): CommentsResponse {
-        return api.getComments(
-            token.accessToken,
-            post.sourceId,
-            post.id
-        )
+    suspend fun loadNextData() {
+        nextDataNeededEvents.emit(Unit)
     }
 
     suspend fun getComments(post: FeedPost): List<Comment> {

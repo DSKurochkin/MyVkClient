@@ -35,8 +35,7 @@ fun NewsFeed(
 
     val state = viewModel.screenState.observeAsState(NewsFeedScreenState.Initial)
 
-    val currentState = state.value
-    when (currentState) {
+    when (val currentState = state.value) {
         is NewsFeedScreenState.Posts -> Posts(
             viewModel = viewModel,
             posts = currentState.posts,
@@ -54,8 +53,6 @@ fun NewsFeed(
                 CircularProgressIndicator(color = vkBlue)
             }
         }
-
-        else -> {}
     }
 
 }
