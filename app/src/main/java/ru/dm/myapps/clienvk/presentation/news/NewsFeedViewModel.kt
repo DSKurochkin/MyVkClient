@@ -1,8 +1,10 @@
 package ru.dm.myapps.clienvk.presentation.news
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
@@ -14,9 +16,14 @@ import ru.dm.myapps.clienvk.extensions.withFlow
 
 class NewsFeedViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = NewsFeedRepository(application)
+
     private val recommendationStateFlow = repository.newsFlowLoader
 
     private val loadNextDataFlow = MutableSharedFlow<NewsFeedScreenState>()
+
+    private val exceptionHandler = CoroutineExceptionHandler { _, _ ->
+        Log.d("NewsFeedViewModel", "Exception was caught by Exception Handler")
+    }
 
     val screenState = recommendationStateFlow
         .filter { it.isNotEmpty() }
@@ -38,14 +45,14 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun changeLikeStatus(post: FeedPost) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             repository.changeLikeStatus(post)
 
         }
     }
 
     fun deletePost(feedPost: FeedPost) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             repository.ignorePost(feedPost)
 
         }

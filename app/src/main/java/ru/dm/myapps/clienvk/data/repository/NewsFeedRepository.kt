@@ -6,10 +6,12 @@ import com.vk.api.sdk.auth.VKAccessToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.flow.stateIn
 import ru.dm.myapps.clienvk.data.mapper.CommentsMapper
 import ru.dm.myapps.clienvk.data.mapper.NewsFeedMapper
@@ -56,8 +58,11 @@ class NewsFeedRepository(application: Application) {
             _posts.addAll(postMapper.responseToPosts(response))
             emit(posts)
         }
-
     }
+        .retry {
+            delay(RETR_TIMEOUT_MILLS)
+            true
+        }
 
     private val nextDataNeededEvents = MutableSharedFlow<Unit>(replay = 1)
     private val refreshListFlow = MutableSharedFlow<List<FeedPost>>()
@@ -106,15 +111,21 @@ class NewsFeedRepository(application: Application) {
         nextDataNeededEvents.emit(Unit)
     }
 
-    suspend fun getComments(post: FeedPost): List<Comment> {
+    fun getComments(post: FeedPost): Flow<List<Comment>> = flow {
         val response = api.getComments(
             token.accessToken,
             post.sourceId,
             post.id
         )
-
-        return commentMapper.responseToComments(
-            response
-        )
+        emit(commentMapper.responseToComments(response))
+    }.retry {
+        delay(RETR_TIMEOUT_MILLS)
+        true
     }
+
+
+    companion object {
+        const val RETR_TIMEOUT_MILLS = 2000L
+    }
+
 }

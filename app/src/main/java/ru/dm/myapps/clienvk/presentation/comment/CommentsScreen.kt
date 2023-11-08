@@ -29,7 +29,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -56,7 +56,7 @@ fun CommentsScreen(
             LocalContext.current.applicationContext as Application
         )
     )
-    val screenState = viewModel.commentsScreenState.observeAsState(CommentsScreenState.Initial)
+    val screenState = viewModel.commentsScreenState.collectAsState(CommentsScreenState.Initial)
     val currentState = screenState.value
     if (currentState !is CommentsScreenState.Comments) return
     Scaffold(
