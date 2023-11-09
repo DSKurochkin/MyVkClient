@@ -2,7 +2,7 @@ package ru.dm.myapps.clienvk.navigation
 
 import android.net.Uri
 import com.google.gson.Gson
-import ru.dm.myapps.clienvk.domain.FeedPost
+import ru.dm.myapps.clienvk.domain.enity.FeedPost
 
 sealed class Screen(val route: String) {
 

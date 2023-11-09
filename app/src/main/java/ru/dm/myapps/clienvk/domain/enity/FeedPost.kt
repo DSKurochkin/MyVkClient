@@ -1,4 +1,4 @@
-package ru.dm.myapps.clienvk.domain
+package ru.dm.myapps.clienvk.domain.enity
 
 data class FeedPost(
     val id: Long,

@@ -38,8 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import ru.dm.myapps.clienvk.domain.Comment
-import ru.dm.myapps.clienvk.domain.FeedPost
+import ru.dm.myapps.clienvk.domain.enity.Comment
+import ru.dm.myapps.clienvk.domain.enity.FeedPost
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)

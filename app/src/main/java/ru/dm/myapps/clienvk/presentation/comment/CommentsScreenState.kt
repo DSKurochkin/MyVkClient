@@ -1,7 +1,7 @@
 package ru.dm.myapps.clienvk.presentation.comment
 
-import ru.dm.myapps.clienvk.domain.Comment
-import ru.dm.myapps.clienvk.domain.FeedPost
+import ru.dm.myapps.clienvk.domain.enity.Comment
+import ru.dm.myapps.clienvk.domain.enity.FeedPost
 
 sealed class CommentsScreenState {
 

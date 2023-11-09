@@ -1,9 +1,9 @@
 package ru.dm.myapps.clienvk.data.mapper
 
 import ru.dm.myapps.clienvk.data.model.newsfeed.NewsFeedResponseDto
-import ru.dm.myapps.clienvk.domain.FeedPost
-import ru.dm.myapps.clienvk.domain.StatisticItem
-import ru.dm.myapps.clienvk.domain.StatisticType
+import ru.dm.myapps.clienvk.domain.enity.FeedPost
+import ru.dm.myapps.clienvk.domain.enity.StatisticItem
+import ru.dm.myapps.clienvk.domain.enity.StatisticType
 import kotlin.math.absoluteValue
 
 class NewsFeedMapper : AppMapper() {

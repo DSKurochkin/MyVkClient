@@ -1,7 +1,7 @@
 package ru.dm.myapps.clienvk.data.mapper
 
 import ru.dm.myapps.clienvk.data.model.comments.CommentsResponse
-import ru.dm.myapps.clienvk.domain.Comment
+import ru.dm.myapps.clienvk.domain.enity.Comment
 
 class CommentsMapper : AppMapper() {
     fun responseToComments(response: CommentsResponse): List<Comment> {

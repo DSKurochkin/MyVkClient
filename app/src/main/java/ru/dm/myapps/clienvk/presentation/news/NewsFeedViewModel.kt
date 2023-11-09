@@ -10,14 +10,23 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
-import ru.dm.myapps.clienvk.data.repository.NewsFeedRepository
-import ru.dm.myapps.clienvk.domain.FeedPost
+import ru.dm.myapps.clienvk.data.repository.NewsFeedRepositoryImpl
+import ru.dm.myapps.clienvk.domain.enity.FeedPost
+import ru.dm.myapps.clienvk.domain.usecases.ChangeLikeStatusUseCase
+import ru.dm.myapps.clienvk.domain.usecases.GetNewsLoaderUseCase
+import ru.dm.myapps.clienvk.domain.usecases.IgnorePostUseCase
+import ru.dm.myapps.clienvk.domain.usecases.LoadNextDataUseCase
 import ru.dm.myapps.clienvk.extensions.withFlow
 
 class NewsFeedViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = NewsFeedRepository(application)
+    private val repository = NewsFeedRepositoryImpl(application)
+    private val getNewsLoaderUseCase = GetNewsLoaderUseCase(repository)
+    private val loadNextDataUseCase = LoadNextDataUseCase(repository)
+    private val ignorePostUseCase = IgnorePostUseCase(repository)
+    private val changeLikeStatusUseCase = ChangeLikeStatusUseCase(repository)
 
-    private val recommendationStateFlow = repository.newsFlowLoader
+
+    private val recommendationStateFlow = getNewsLoaderUseCase()
 
     private val loadNextDataFlow = MutableSharedFlow<NewsFeedScreenState>()
 
@@ -40,20 +49,20 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
                     isLoading = true
                 )
             )
-            repository.loadNextData()
+            loadNextDataUseCase()
         }
     }
 
-    fun changeLikeStatus(post: FeedPost) {
+    fun changeLikeStatus(feedPost: FeedPost) {
         viewModelScope.launch(exceptionHandler) {
-            repository.changeLikeStatus(post)
+            changeLikeStatusUseCase(feedPost)
 
         }
     }
 
     fun deletePost(feedPost: FeedPost) {
         viewModelScope.launch(exceptionHandler) {
-            repository.ignorePost(feedPost)
+            ignorePostUseCase(feedPost)
 
         }
     }

@@ -3,7 +3,7 @@ package ru.dm.myapps.clienvk.presentation.comment
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import ru.dm.myapps.clienvk.domain.FeedPost
+import ru.dm.myapps.clienvk.domain.enity.FeedPost
 
 class CommentsViewModelFactory(
     private val post: FeedPost,

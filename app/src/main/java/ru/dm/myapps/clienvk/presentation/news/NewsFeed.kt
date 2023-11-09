@@ -22,7 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import ru.dm.myapps.clienvk.domain.FeedPost
+import ru.dm.myapps.clienvk.domain.enity.FeedPost
 import ru.dm.myapps.clienvk.ui.theme.vkBlue
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)

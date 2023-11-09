@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
                             launcher.launch(listOf(VKScope.WALL, VKScope.FRIENDS))
                         }
 
-                        else -> LoginScreen {
+                        else -> {
                         }
                     }
                 }
