@@ -18,6 +18,7 @@ import ru.dm.myapps.clienvk.data.mapper.NewsFeedMapper
 import ru.dm.myapps.clienvk.data.model.newsfeed.NewsFeedResponseDto
 import ru.dm.myapps.clienvk.data.network.ApiFactory
 import ru.dm.myapps.clienvk.data.network.ApiService
+import ru.dm.myapps.clienvk.domain.AuthState
 import ru.dm.myapps.clienvk.domain.Comment
 import ru.dm.myapps.clienvk.domain.FeedPost
 import ru.dm.myapps.clienvk.domain.StatisticItem
@@ -26,7 +27,8 @@ import ru.dm.myapps.clienvk.extensions.withFlow
 
 class NewsFeedRepository(application: Application) {
     private val storage = VKPreferencesKeyValueStorage(application)
-    private val token = VKAccessToken.restore(storage) ?: throw RuntimeException("Invalid token")
+    private val token
+        get() = VKAccessToken.restore(storage) ?: throw RuntimeException("Invalid token")
 
     private val api: ApiService = ApiFactory.apiService
     private val postMapper = NewsFeedMapper()
@@ -77,6 +79,21 @@ class NewsFeedRepository(application: Application) {
             initialValue = posts
         )
 
+    private val checkAuthEvents = MutableSharedFlow<Unit>(1)
+    val authStateFlow = flow {
+        checkAuthEvents.emit(Unit)
+        checkAuthEvents.collect {
+            val loggedIn = token.isValid
+            val authState = if (loggedIn) AuthState.Authorized else AuthState.NotAuthorized
+            emit(authState)
+        }
+    }.stateIn(
+        scope = coroutineScope,
+        started = SharingStarted.Lazily,
+        initialValue = AuthState.Initial
+    )
+
+
     suspend fun changeLikeStatus(post: FeedPost) {
         val response = if (!post.isLiked) {
             api.addLike(
@@ -123,6 +140,9 @@ class NewsFeedRepository(application: Application) {
         true
     }
 
+    suspend fun checkAuth() {
+        checkAuthEvents.emit(Unit)
+    }
 
     companion object {
         const val RETR_TIMEOUT_MILLS = 2000L

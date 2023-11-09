@@ -1,4 +1,4 @@
-package ru.dm.myapps.clienvk.presentation.main.login
+package ru.dm.myapps.clienvk.domain
 
 sealed class AuthState {
 
