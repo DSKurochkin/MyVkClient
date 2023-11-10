@@ -1,8 +1,7 @@
 package ru.dm.myapps.clienvk.presentation.news
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -10,20 +9,20 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
-import ru.dm.myapps.clienvk.data.repository.NewsFeedRepositoryImpl
 import ru.dm.myapps.clienvk.domain.enity.FeedPost
 import ru.dm.myapps.clienvk.domain.usecases.ChangeLikeStatusUseCase
 import ru.dm.myapps.clienvk.domain.usecases.GetNewsLoaderUseCase
 import ru.dm.myapps.clienvk.domain.usecases.IgnorePostUseCase
 import ru.dm.myapps.clienvk.domain.usecases.LoadNextDataUseCase
 import ru.dm.myapps.clienvk.extensions.withFlow
+import javax.inject.Inject
 
-class NewsFeedViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = NewsFeedRepositoryImpl(application)
-    private val getNewsLoaderUseCase = GetNewsLoaderUseCase(repository)
-    private val loadNextDataUseCase = LoadNextDataUseCase(repository)
-    private val ignorePostUseCase = IgnorePostUseCase(repository)
-    private val changeLikeStatusUseCase = ChangeLikeStatusUseCase(repository)
+class NewsFeedViewModel @Inject constructor(
+    getNewsLoaderUseCase: GetNewsLoaderUseCase,
+    private val loadNextDataUseCase: LoadNextDataUseCase,
+    private val ignorePostUseCase: IgnorePostUseCase,
+    private val changeLikeStatusUseCase: ChangeLikeStatusUseCase,
+) : ViewModel() {
 
 
     private val recommendationStateFlow = getNewsLoaderUseCase()

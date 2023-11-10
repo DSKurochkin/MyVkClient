@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.stateIn
 import ru.dm.myapps.clienvk.data.mapper.CommentsMapper
 import ru.dm.myapps.clienvk.data.mapper.NewsFeedMapper
 import ru.dm.myapps.clienvk.data.model.newsfeed.NewsFeedResponseDto
-import ru.dm.myapps.clienvk.data.network.ApiFactory
 import ru.dm.myapps.clienvk.data.network.ApiService
 import ru.dm.myapps.clienvk.domain.AuthState
 import ru.dm.myapps.clienvk.domain.NewsFeedRepository
@@ -25,16 +24,21 @@ import ru.dm.myapps.clienvk.domain.enity.FeedPost
 import ru.dm.myapps.clienvk.domain.enity.StatisticItem
 import ru.dm.myapps.clienvk.domain.enity.StatisticType
 import ru.dm.myapps.clienvk.extensions.withFlow
+import javax.inject.Inject
 
-class NewsFeedRepositoryImpl(application: Application) : NewsFeedRepository {
-    private val api: ApiService = ApiFactory.apiService
-    private val postMapper = NewsFeedMapper()
-    private val commentMapper = CommentsMapper()
+class NewsFeedRepositoryImpl @Inject constructor(
+    application: Application,
+    private val api: ApiService,
+    private val postMapper: NewsFeedMapper,
+    private val commentMapper: CommentsMapper,
+    private val storage: VKPreferencesKeyValueStorage
+) : NewsFeedRepository {
+
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
     private var nextFrom: String? = null
 
     //Authorization
-    private val storage = VKPreferencesKeyValueStorage(application)
+
     private val token
         get() = VKAccessToken.restore(storage)
     private val checkAuthEvents = MutableSharedFlow<Unit>(1)

@@ -4,9 +4,10 @@ import ru.dm.myapps.clienvk.data.model.newsfeed.NewsFeedResponseDto
 import ru.dm.myapps.clienvk.domain.enity.FeedPost
 import ru.dm.myapps.clienvk.domain.enity.StatisticItem
 import ru.dm.myapps.clienvk.domain.enity.StatisticType
+import javax.inject.Inject
 import kotlin.math.absoluteValue
 
-class NewsFeedMapper : AppMapper() {
+class NewsFeedMapper @Inject constructor() : AppMapper() {
     fun responseToPosts(response: NewsFeedResponseDto): List<FeedPost> {
         val dtoPosts = response.content.posts
         val dtoGroups = response.content.group
@@ -45,8 +46,4 @@ class NewsFeedMapper : AppMapper() {
         return posts
     }
 
-//    private fun convertDate(timestamp: Long): String {
-//        return SimpleDateFormat("d MM yyyy, hh:mm", Locale.getDefault())
-//            .format(Date(timestamp * 1000))
-//    }
 }

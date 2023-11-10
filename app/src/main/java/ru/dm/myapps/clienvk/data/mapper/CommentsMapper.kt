@@ -2,8 +2,9 @@ package ru.dm.myapps.clienvk.data.mapper
 
 import ru.dm.myapps.clienvk.data.model.comments.CommentsResponse
 import ru.dm.myapps.clienvk.domain.enity.Comment
+import javax.inject.Inject
 
-class CommentsMapper : AppMapper() {
+class CommentsMapper @Inject constructor() : AppMapper() {
     fun responseToComments(response: CommentsResponse): List<Comment> {
         val res = mutableListOf<Comment>()
         val profilesDtos = response.content.profiles

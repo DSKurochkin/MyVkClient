@@ -1,7 +1,6 @@
 package ru.dm.myapps.clienvk.presentation.comment
 
 import android.annotation.SuppressLint
-import android.app.Application
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,13 +32,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import ru.dm.myapps.clienvk.domain.enity.Comment
 import ru.dm.myapps.clienvk.domain.enity.FeedPost
+import ru.dm.myapps.clienvk.presentation.ViewModelFactory
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,14 +46,12 @@ import ru.dm.myapps.clienvk.domain.enity.FeedPost
 
 
 fun CommentsScreen(
+    viewModelFactory: ViewModelFactory,
     onBackPressedListener: () -> Unit,
     post: FeedPost
 ) {
     val viewModel: CommentsViewModel = viewModel(
-        factory = CommentsViewModelFactory(
-            post,
-            LocalContext.current.applicationContext as Application
-        )
+        factory = viewModelFactory
     )
     val screenState = viewModel.commentsScreenState.collectAsState(CommentsScreenState.Initial)
     val currentState = screenState.value

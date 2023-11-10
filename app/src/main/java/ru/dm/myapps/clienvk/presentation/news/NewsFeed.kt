@@ -23,15 +23,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.dm.myapps.clienvk.domain.enity.FeedPost
+import ru.dm.myapps.clienvk.presentation.ViewModelFactory
 import ru.dm.myapps.clienvk.ui.theme.vkBlue
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun NewsFeed(
+    viewModelFactory: ViewModelFactory,
     onCommentsItemClickListener: (FeedPost) -> Unit,
     paddingValues: PaddingValues
 ) {
-    val viewModel: NewsFeedViewModel = viewModel()
+    val viewModel: NewsFeedViewModel = viewModel(factory = viewModelFactory)
 
     val state = viewModel.screenState.collectAsState(NewsFeedScreenState.Initial)
 
