@@ -14,23 +14,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKScope
 import ru.dm.myapps.clienvk.domain.AuthState
-import ru.dm.myapps.clienvk.presentation.NewsFeedApplication
-import ru.dm.myapps.clienvk.presentation.ViewModelFactory
+import ru.dm.myapps.clienvk.presentation.getApplicationComponent
 import ru.dm.myapps.clienvk.presentation.main.login.LoginScreen
 import ru.dm.myapps.clienvk.presentation.main.login.LoginViewModel
 import ru.dm.myapps.clienvk.ui.theme.ClienVKTheme
-import javax.inject.Inject
 
 class MainActivity : ComponentActivity() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-    private val component by lazy {
-        (application as NewsFeedApplication).component
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        component.inject(this)
         super.onCreate(savedInstanceState)
         setContent {
             ClienVKTheme {
@@ -39,7 +30,8 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.background)
                 ) {
-                    val viewModel: LoginViewModel = viewModel(factory = viewModelFactory)
+                    val viewModel: LoginViewModel =
+                        viewModel(factory = getApplicationComponent().getViewModelFactory())
                     val authState = viewModel.authState.collectAsState(AuthState.Initial)
                     val launcher = rememberLauncherForActivityResult(
                         contract = VK.getVKAuthActivityResultContract()
@@ -49,7 +41,7 @@ class MainActivity : ComponentActivity() {
 
                     when (authState.value) {
                         is AuthState.Authorized -> {
-                            MainScreen(viewModelFactory)
+                            MainScreen()
                         }
 
                         is AuthState.NotAuthorized -> LoginScreen {

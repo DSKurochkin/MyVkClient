@@ -19,7 +19,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.dm.myapps.clienvk.navigation.AppNavGraph
 import ru.dm.myapps.clienvk.navigation.NavigationState
 import ru.dm.myapps.clienvk.navigation.rememberNavigationState
-import ru.dm.myapps.clienvk.presentation.ViewModelFactory
 import ru.dm.myapps.clienvk.presentation.comment.CommentsScreen
 import ru.dm.myapps.clienvk.presentation.news.NewsFeed
 import ru.dm.myapps.clienvk.presentation.un_use.FavoriteScreen
@@ -28,7 +27,7 @@ import ru.dm.myapps.clienvk.presentation.un_use.ProfileScreen
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun MainScreen(viewModelFactory: ViewModelFactory) {
+fun MainScreen() {
     val navigationState = rememberNavigationState()
 
     Scaffold(
@@ -39,7 +38,6 @@ fun MainScreen(viewModelFactory: ViewModelFactory) {
             navHostController = navigationState.navHostController,
             newsFeedScreenCallback = {
                 NewsFeed(
-                    viewModelFactory,
                     onCommentsItemClickListener = { post ->
                         navigationState.navigateToComment(post)
                     },

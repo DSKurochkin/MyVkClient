@@ -32,14 +32,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import ru.dm.myapps.clienvk.domain.enity.Comment
 import ru.dm.myapps.clienvk.domain.enity.FeedPost
-import ru.dm.myapps.clienvk.presentation.NewsFeedApplication
+import ru.dm.myapps.clienvk.presentation.getApplicationComponent
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,8 +49,7 @@ fun CommentsScreen(
     onBackPressedListener: () -> Unit,
     post: FeedPost
 ) {
-    val component = (LocalContext.current.applicationContext as NewsFeedApplication)
-        .component
+    val component = getApplicationComponent()
         .getCommentScreenComponentFactory()
         .create(post)
     val viewModel: CommentsViewModel = viewModel(
