@@ -50,7 +50,6 @@ fun MainScreen(viewModelFactory: ViewModelFactory) {
             profileScreenCallback = { ProfileScreen() },
             commentsScreenContentCallback = { post ->
                 CommentsScreen(
-                    viewModelFactory,
                     onBackPressedListener = { navigationState.navHostController.popBackStack() },
                     post = post
                 )

@@ -32,13 +32,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import ru.dm.myapps.clienvk.domain.enity.Comment
 import ru.dm.myapps.clienvk.domain.enity.FeedPost
-import ru.dm.myapps.clienvk.presentation.ViewModelFactory
+import ru.dm.myapps.clienvk.presentation.NewsFeedApplication
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,12 +47,15 @@ import ru.dm.myapps.clienvk.presentation.ViewModelFactory
 
 
 fun CommentsScreen(
-    viewModelFactory: ViewModelFactory,
     onBackPressedListener: () -> Unit,
     post: FeedPost
 ) {
+    val component = (LocalContext.current.applicationContext as NewsFeedApplication)
+        .component
+        .getCommentScreenComponentFactory()
+        .create(post)
     val viewModel: CommentsViewModel = viewModel(
-        factory = viewModelFactory
+        factory = component.getViewModelFactory()
     )
     val screenState = viewModel.commentsScreenState.collectAsState(CommentsScreenState.Initial)
     val currentState = screenState.value
