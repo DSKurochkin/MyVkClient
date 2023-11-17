@@ -17,6 +17,7 @@ import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,7 +37,23 @@ fun NewsFeed(
         viewModel(factory = getApplicationComponent().getViewModelFactory())
 
     val state = viewModel.screenState.collectAsState(NewsFeedScreenState.Initial)
+    ObserveState(
+        state = state,
+        viewModel = viewModel,
+        onCommentsItemClickListener = onCommentsItemClickListener,
+        paddingValues = paddingValues
+    )
 
+
+}
+
+@Composable
+fun ObserveState(
+    state: State<NewsFeedScreenState>,
+    viewModel: NewsFeedViewModel,
+    onCommentsItemClickListener: (FeedPost) -> Unit,
+    paddingValues: PaddingValues
+) {
     when (val currentState = state.value) {
         is NewsFeedScreenState.Posts -> Posts(
             viewModel = viewModel,
@@ -56,7 +73,6 @@ fun NewsFeed(
             }
         }
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)

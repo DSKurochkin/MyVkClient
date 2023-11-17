@@ -1,5 +1,8 @@
 package ru.dm.myapps.clienvk.domain.enity
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class FeedPost(
     val id: Long,
     val sourceId: Long,

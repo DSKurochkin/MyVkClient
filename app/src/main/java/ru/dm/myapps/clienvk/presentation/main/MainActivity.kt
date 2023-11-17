@@ -24,20 +24,21 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val viewModel: LoginViewModel =
+                viewModel(factory = getApplicationComponent().getViewModelFactory())
+            val authState = viewModel.authState.collectAsState(AuthState.Initial)
+            val launcher = rememberLauncherForActivityResult(
+                contract = VK.getVKAuthActivityResultContract()
+            ) {
+                viewModel.performResult()
+            }
             ClienVKTheme {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.background)
                 ) {
-                    val viewModel: LoginViewModel =
-                        viewModel(factory = getApplicationComponent().getViewModelFactory())
-                    val authState = viewModel.authState.collectAsState(AuthState.Initial)
-                    val launcher = rememberLauncherForActivityResult(
-                        contract = VK.getVKAuthActivityResultContract()
-                    ) {
-                        viewModel.performResult()
-                    }
+
 
                     when (authState.value) {
                         is AuthState.Authorized -> {

@@ -28,6 +28,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,6 +57,17 @@ fun CommentsScreen(
         factory = component.getViewModelFactory()
     )
     val screenState = viewModel.commentsScreenState.collectAsState(CommentsScreenState.Initial)
+    ObserveCommentState(screenState, onBackPressedListener)
+
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ObserveCommentState(
+    screenState: State<CommentsScreenState>,
+    onBackPressedListener: () -> Unit
+) {
     val currentState = screenState.value
     if (currentState !is CommentsScreenState.Comments) return
     Scaffold(
@@ -100,11 +112,12 @@ fun CommentsScreen(
             items(currentState.comments, { it.id }) { comment ->
                 Comment(comment = comment)
             }
-
         }
     }
 }
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Comment(comment: Comment) {
 
@@ -132,7 +145,6 @@ private fun Comment(comment: Comment) {
                     color = MaterialTheme.colorScheme.onPrimary
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-                //Text(text = "CommentId: ${comment.id}", fontSize = 15.sp, color = Color.Black)
             }
             Spacer(modifier = Modifier.height(4.dp))
             Text(text = comment.text, fontSize = 14.sp, color = MaterialTheme.colorScheme.onPrimary)
@@ -144,6 +156,4 @@ private fun Comment(comment: Comment) {
             )
         }
     }
-
-
 }
