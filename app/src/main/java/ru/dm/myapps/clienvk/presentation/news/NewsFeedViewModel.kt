@@ -30,7 +30,6 @@ class NewsFeedViewModel @Inject constructor(
     private val loadNextDataFlow = MutableSharedFlow<NewsFeedScreenState>()
 
     private val exceptionHandler = CoroutineExceptionHandler { _, _ ->
-        Log.d("NewsFeedViewModel", "Exception was caught by Exception Handler")
     }
 
     val screenState = recommendationStateFlow
